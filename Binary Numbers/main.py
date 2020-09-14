@@ -22,4 +22,11 @@ def count_numbers(n, k):
     return counter
 
 
-print(count_numbers(256, 8))
+nu = int(input("Enter N. N = How much numbers from 1 to N we check "))
+ko = int(input("Enter K. K = How much zeroes should binary number have "))
+
+if nu <= 109 and ko <= 109:
+    print("There are " + str(count_numbers(nu, ko)) + " numbers between 1 and " + str(nu) + " that have " + str(ko) +
+          " zeroes in binary")
+else:
+    print("Either N or K is bigger than 109")
