@@ -39,6 +39,15 @@ def prime_luca_numbers(num):
         b = c
 
 
-print('How many Luca\'s prime numbers should the code generate?')
-quantity = input('Attention! Generating more than 16 numbers can considerably slow down the process! ')
+while True:
+    try:
+        quantity = int(input('How many Luca\'s prime numbers should the code generate?\n'
+                             'Attention! Generating more than 16 numbers can considerably slow down the process! '))
+        if quantity <= 0:
+            print('\nInteger should be bigger than 0')
+            continue
+        break
+    except ValueError:
+        print('\nPlease enter an integer')
+
 prime_luca_numbers(quantity)
