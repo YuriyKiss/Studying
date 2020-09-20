@@ -22,11 +22,16 @@ def count_numbers(n, k):
     return counter
 
 
-nu = int(input("Enter N. N = How much numbers from 1 to N we check "))
-ko = int(input("Enter K. K = How much zeroes should binary number have "))
+while True:
+    try:
+        nu = int(input("Enter N. N = How much numbers from 1 to N we check "))      # nu - numbers
+        am = int(input("Enter K. K = How much zeroes should binary number have "))  # am - amount of zeroes
 
-if nu <= 109 and ko <= 109:
-    print("There are " + str(count_numbers(nu, ko)) + " numbers between 1 and " + str(nu) + " that have " + str(ko) +
-          " zeroes in binary")
-else:
-    print("Either N or K is bigger than 109")
+        if nu > 109 or am > 109:
+            print("\nEither N or K is bigger than 109")
+            continue
+        break
+    except ValueError:
+        print("\nBoth N and K should be an integers")
+
+print("There are", count_numbers(nu, am), "numbers between 1 and", nu, "that have", am, "zeroes in binary")
