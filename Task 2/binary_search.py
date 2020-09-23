@@ -10,7 +10,6 @@ def binary_search(array, value):
 
     operations = 1
 
-    print("Sorted array:", array)
     print("\nLooking in range from", low, "to " + str(high), ",", array[mid], "is the middle element")
     while array[mid] != value and low <= high:
         if value > array[mid]:

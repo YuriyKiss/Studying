@@ -101,21 +101,27 @@ while True:
                     resulting_array[j], resulting_array[j+1] = resulting_array[j+1], resulting_array[j]
                     index_array[j], index_array[j+1] = index_array[j+1], index_array[j]
 
+
         while True:
             value = validate_int("\nWhich value's position we are looking for: ")
-            middle_el = binary_search(resulting_array, value)
+            print("\nSorted array:      ", resulting_array)
             print("Sorted index array:", index_array)
+            middle_el = binary_search(resulting_array, value)
             if middle_el == -1:
                 print("There are no such value in the array")
                 continue
             else:
-                print(value, "is", index_array[middle_el], "element of an array")
-                for i in range(0, len(resulting_array)):
+                print("\n", value, "is", index_array[middle_el], "element of an array\n")
+                for i in range(middle_el - 1, -1, -1):
                     if resulting_array[middle_el] == resulting_array[i] and i != middle_el:
-                        if i < middle_el:
-                            print("Also,", value, "found on", index_array[i], "before first appearance of element")
-                        elif i > middle_el:
-                            print("Also,", value, "found on", index_array[i], "after first appearance of element")
+                        print("Also,", value, "found on", index_array[i], "before first appearance of element")
+                    else:
+                        break
+                for i in range(middle_el + 1, len(resulting_array)):
+                    if resulting_array[middle_el] == resulting_array[i] and i != middle_el:
+                        print("Also,", value, "found on", index_array[i], "after first appearance of element")
+                    else:
+                        break
                 break
     elif menu_option == 2:
         while True:
@@ -166,19 +172,24 @@ while True:
 
         while True:
             value = validate_int("\nWhich value's position we are looking for: ")
+            print("\nSorted array:      ", resulting_array)
+            print("Sorted index array:", index_array)
             middle_el = binary_search(resulting_array, value)
-            print("\nSorted index array:", index_array)
             if middle_el == -1:
                 print("There are no such value in the array")
                 continue
             else:
-                print(value, "is", index_array[middle_el], "element of an array\n")
-                for i in range(0, len(resulting_array)):
+                print("\n", value, "is", index_array[middle_el], "element of an array\n")
+                for i in range(middle_el - 1, -1, -1):
                     if resulting_array[middle_el] == resulting_array[i] and i != middle_el:
-                        if i < middle_el:
-                            print("Also,", value, "found on", index_array[i], "before first appearance of element")
-                        elif i > middle_el:
-                            print("Also,", value, "found on", index_array[i], "after first appearance of element")
+                        print("Also,", value, "found on", index_array[i], "before first appearance of element")
+                    else:
+                        break
+                for i in range(middle_el + 1, len(resulting_array)):
+                    if resulting_array[middle_el] == resulting_array[i] and i != middle_el:
+                        print("Also,", value, "found on", index_array[i], "after first appearance of element")
+                    else:
+                        break
                 break
 
     elif menu_option == 3:
