@@ -143,11 +143,11 @@ while True:
             continue
         min_res = min(resulting_array)
         max_res = max(resulting_array)
-
+        
         print("There are", len(resulting_array), "negative products of X(i) * Y(y)",
               "\nMinimal element is", min_res,
               "\nMaximal element is", max_res, '\n')
-
+        
         first_processed = array_processing(first_array, min_res, max_res)
         print("First array after processing:", first_processed)
         second_processed = array_processing(second_array, min_res, max_res)
