@@ -64,6 +64,8 @@ while True:
         first_array, second_array = [], []
         lower_rand = validate_int("Input lower limit for generating: ")
         upper_rand = validate_int("Input upper limit for generating: ")
+        if lower_rand > upper_rand:
+            lower_rand, upper_rand = upper_rand, lower_rand
         for i in range(0, elements_amount):
             first_array.append(random.randint(lower_rand, upper_rand))
             second_array.append(random.randint(lower_rand, upper_rand))
@@ -72,6 +74,9 @@ while True:
               '\nSecond array contains:', second_array, '\n')
 
         resulting_array = negative_products(first_array, second_array)
+        if len(resulting_array) == 0:
+            print("There is no negative products")
+            continue
         min_res = min(resulting_array)
         max_res = max(resulting_array)
 
@@ -105,6 +110,9 @@ while True:
               '\nSecond array contains: ', second_array, '\n')
 
         resulting_array = negative_products(first_array, second_array)
+        if len(resulting_array) == 0:
+            print("There is no negative products")
+            continue
         min_res = min(resulting_array)
         max_res = max(resulting_array)
 
