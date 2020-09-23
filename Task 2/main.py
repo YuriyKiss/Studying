@@ -9,6 +9,7 @@
 # Всі числа в масивах x та y, які рівні максимальному елементу, замінити на протилежне,
 # а ті числа, які дорівнюють мінімальному, замінити на нулі.
 import random
+from binary_search import binary_search
 
 
 def validate_int(info):
@@ -32,10 +33,7 @@ def negative_products(first, second):
     return array_of_negatives
 
 
-def array_processing(array):
-    minimal_element = min(array)
-    maximal_element = max(array)
-
+def array_processing(array, minimal_element, maximal_element):
     for i in range(0, len(array)):
         if array[i] == minimal_element:
             array[i] = 0
@@ -65,23 +63,60 @@ while True:
             break
 
         first_array, second_array = [], []
+        lower_rand = validate_int("Input lower limit for generating: ")
+        upper_rand = validate_int("Input upper limit for generating: ")
+        if lower_rand > upper_rand:
+            lower_rand, upper_rand = upper_rand, lower_rand
         for i in range(0, elements_amount):
-            first_array.append(random.randint(-1000, 1000))
-            second_array.append(random.randint(-1000, 1000))
+            first_array.append(random.randint(lower_rand, upper_rand))
+            second_array.append(random.randint(lower_rand, upper_rand))
 
         print("\nFirst array contains:", first_array,
               '\nSecond array contains:', second_array, '\n')
 
-        array_of_negatives = negative_products(first_array, second_array)
-        print("There are", len(array_of_negatives), "negative products of X(i) * Y(y)"
-              "\nMinimal element is", min(array_of_negatives),
-              "\nMaximal element is", max(array_of_negatives), '\n')
+        resulting_array = negative_products(first_array, second_array)
+        if len(resulting_array) == 0:
+            print("There is no negative products")
+            continue
+        min_res = min(resulting_array)
+        max_res = max(resulting_array)
 
-        first_processed = array_processing(first_array)
+        print("There are", len(resulting_array), "negative products of X(i) * Y(y)",
+              "\nMinimal element is", min_res,
+              "\nMaximal element is", max_res, '\n')
+
+        first_processed = array_processing(first_array, min_res, max_res)
         print("First array after processing:", first_processed)
-        second_processed = array_processing(second_array)
+        second_processed = array_processing(second_array, min_res, max_res)
         print("Second array after processing:", second_processed, '\n')
 
+        print("Array of negative products:", resulting_array)
+        index_array = []
+        for i in range(0, len(resulting_array)):
+            index_array.append(i)
+
+        for i in range(0, len(resulting_array) - 1):
+            for j in range(0, len(resulting_array) - i - 1):
+                if resulting_array[j] > resulting_array[j + 1]:
+                    resulting_array[j], resulting_array[j+1] = resulting_array[j+1], resulting_array[j]
+                    index_array[j], index_array[j+1] = index_array[j+1], index_array[j]
+
+        while True:
+            value = validate_int("\nWhich value's position we are looking for: ")
+            middle_el = binary_search(resulting_array, value)
+            print("Sorted index array:", index_array)
+            if middle_el == -1:
+                print("There are no such value in the array")
+                continue
+            else:
+                print(value, "is", index_array[middle_el], "element of an array")
+                for i in range(0, len(resulting_array)):
+                    if resulting_array[middle_el] == resulting_array[i] and i != middle_el:
+                        if i < middle_el:
+                            print("Also,", value, "found on", index_array[i], "before first appearance of element")
+                        elif i > middle_el:
+                            print("Also,", value, "found on", index_array[i], "after first appearance of element")
+                break
     elif menu_option == 2:
         while True:
             size = validate_int("How much elements you want to be in array? ")
@@ -102,15 +137,49 @@ while True:
         print("\nFirst array contains: ", first_array,
               '\nSecond array contains: ', second_array, '\n')
 
-        array_of_negatives = negative_products(first_array, second_array)
-        print("There are", len(array_of_negatives), "negative products of X(i) * Y(y)"
-              "\nMinimal element is", min(array_of_negatives),
-              "\nMaximal element is", max(array_of_negatives), '\n')
+        resulting_array = negative_products(first_array, second_array)
+        if len(resulting_array) == 0:
+            print("There is no negative products")
+            continue
+        min_res = min(resulting_array)
+        max_res = max(resulting_array)
 
-        first_processed = array_processing(first_array)
+        print("There are", len(resulting_array), "negative products of X(i) * Y(y)",
+              "\nMinimal element is", min_res,
+              "\nMaximal element is", max_res, '\n')
+
+        first_processed = array_processing(first_array, min_res, max_res)
         print("First array after processing:", first_processed)
-        second_processed = array_processing(second_array)
+        second_processed = array_processing(second_array, min_res, max_res)
         print("Second array after processing:", second_processed, '\n')
+
+        print("Array of negative products:", resulting_array)
+        index_array = []
+        for i in range(0, len(resulting_array)):
+            index_array.append(i)
+
+        for i in range(0, len(resulting_array) - 1):
+            for j in range(0, len(resulting_array) - i - 1):
+                if resulting_array[j] > resulting_array[j + 1]:
+                    resulting_array[j], resulting_array[j + 1] = resulting_array[j + 1], resulting_array[j]
+                    index_array[j], index_array[j + 1] = index_array[j + 1], index_array[j]
+
+        while True:
+            value = validate_int("\nWhich value's position we are looking for: ")
+            middle_el = binary_search(resulting_array, value)
+            print("\nSorted index array:", index_array)
+            if middle_el == -1:
+                print("There are no such value in the array")
+                continue
+            else:
+                print(value, "is", index_array[middle_el], "element of an array\n")
+                for i in range(0, len(resulting_array)):
+                    if resulting_array[middle_el] == resulting_array[i] and i != middle_el:
+                        if i < middle_el:
+                            print("Also,", value, "found on", index_array[i], "before first appearance of element")
+                        elif i > middle_el:
+                            print("Also,", value, "found on", index_array[i], "after first appearance of element")
+                break
 
     elif menu_option == 3:
         break
