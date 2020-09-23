@@ -32,10 +32,7 @@ def negative_products(first, second):
     return array_of_negatives
 
 
-def array_processing(array):
-    minimal_element = min(array)
-    maximal_element = max(array)
-
+def array_processing(array, minimal_element, maximal_element):
     for i in range(0, len(array)):
         if array[i] == minimal_element:
             array[i] = 0
@@ -65,21 +62,26 @@ while True:
             break
 
         first_array, second_array = [], []
+        lower_rand = validate_int("Input lower limit for generating: ")
+        upper_rand = validate_int("Input upper limit for generating: ")
         for i in range(0, elements_amount):
-            first_array.append(random.randint(-1000, 1000))
-            second_array.append(random.randint(-1000, 1000))
+            first_array.append(random.randint(lower_rand, upper_rand))
+            second_array.append(random.randint(lower_rand, upper_rand))
 
         print("\nFirst array contains:", first_array,
               '\nSecond array contains:', second_array, '\n')
 
-        array_of_negatives = negative_products(first_array, second_array)
-        print("There are", len(array_of_negatives), "negative products of X(i) * Y(y)"
-              "\nMinimal element is", min(array_of_negatives),
-              "\nMaximal element is", max(array_of_negatives), '\n')
+        resulting_array = negative_products(first_array, second_array)
+        min_res = min(resulting_array)
+        max_res = max(resulting_array)
 
-        first_processed = array_processing(first_array)
+        print("There are", len(resulting_array), "negative products of X(i) * Y(y)",
+              "\nMinimal element is", min_res,
+              "\nMaximal element is", max_res, '\n')
+
+        first_processed = array_processing(first_array, min_res, max_res)
         print("First array after processing:", first_processed)
-        second_processed = array_processing(second_array)
+        second_processed = array_processing(second_array, min_res, max_res)
         print("Second array after processing:", second_processed, '\n')
 
     elif menu_option == 2:
@@ -102,14 +104,17 @@ while True:
         print("\nFirst array contains: ", first_array,
               '\nSecond array contains: ', second_array, '\n')
 
-        array_of_negatives = negative_products(first_array, second_array)
-        print("There are", len(array_of_negatives), "negative products of X(i) * Y(y)"
-              "\nMinimal element is", min(array_of_negatives),
-              "\nMaximal element is", max(array_of_negatives), '\n')
+        resulting_array = negative_products(first_array, second_array)
+        min_res = min(resulting_array)
+        max_res = max(resulting_array)
 
-        first_processed = array_processing(first_array)
+        print("There are", len(resulting_array), "negative products of X(i) * Y(y)",
+              "\nMinimal element is", min_res,
+              "\nMaximal element is", max_res, '\n')
+
+        first_processed = array_processing(first_array, min_res, max_res)
         print("First array after processing:", first_processed)
-        second_processed = array_processing(second_array)
+        second_processed = array_processing(second_array, min_res, max_res)
         print("Second array after processing:", second_processed, '\n')
 
     elif menu_option == 3:
