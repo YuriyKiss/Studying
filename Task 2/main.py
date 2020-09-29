@@ -21,6 +21,19 @@ def validate_int(info):
     return num
 
 
+def validate_size(info):
+    while True:
+        try:
+            num = int(input(info))
+            if num <= 0:
+                print("Array should contain more than 0 elements.")
+                continue
+            break
+        except ValueError:
+            print("WARNING - Please enter an integer.")
+    return num
+
+
 def negative_products(first, second):
     array_of_negatives = []
 
@@ -42,6 +55,39 @@ def array_processing(array, minimal_element, maximal_element):
     return array
 
 
+def find_min(array):
+    min_el = array[0]
+    for x in array:
+        if x < min_el:
+            min_el = x
+
+    return min_el
+
+
+def find_max(array):
+    max_el = array[0]
+    for x in array:
+        if x > max_el:
+            max_el = x
+
+    return max_el
+
+
+def min_max_manipulations(first, second, resulting):
+    min_res = find_min(resulting)
+    max_res = find_max(resulting)
+
+    print("There are", len(resulting), "negative products of X(i) * Y(y)",
+          "\nMinimal element is", min_res,
+          "\nMaximal element is", max_res, '\n')
+
+    first_processed = array_processing(first, min_res, max_res)
+    print("First array after processing:", first_processed)
+    second_processed = array_processing(second, min_res, max_res)
+    print("Second array after processing:", second_processed, '\n')
+
+
+# Main function start #
 while True:
     print('-' * 25, "MENU", '-' * 25)
     menu_option = validate_int("1. Input amount of random elements in both arrays\n"
@@ -54,12 +100,7 @@ while True:
         continue
 
     elif menu_option == 1:
-        while True:
-            elements_amount = validate_int("How much elements you want to generate? ")
-            if elements_amount <= 0:
-                print("Array should contain more than 0 elements.")
-                continue
-            break
+        elements_amount = validate_size("How much elements you want to generate? ")
 
         first_array, second_array = [], []
         lower_rand = validate_int("Input lower limit for generating: ")
@@ -77,25 +118,10 @@ while True:
         if len(resulting_array) == 0:
             print("There is no negative products")
             continue
-        min_res = min(resulting_array)
-        max_res = max(resulting_array)
-
-        print("There are", len(resulting_array), "negative products of X(i) * Y(y)",
-              "\nMinimal element is", min_res,
-              "\nMaximal element is", max_res, '\n')
-
-        first_processed = array_processing(first_array, min_res, max_res)
-        print("First array after processing:", first_processed)
-        second_processed = array_processing(second_array, min_res, max_res)
-        print("Second array after processing:", second_processed, '\n')
+        min_max_manipulations(first_array, second_array, resulting_array)
 
     elif menu_option == 2:
-        while True:
-            size = validate_int("How much elements you want to be in array? ")
-            if size <= 0:
-                print("Array should contain more than 0 elements.")
-                continue
-            break
+        size = validate_size("How much elements you want to input? ")
 
         first_array, second_array = [], []
         print("Enter elements of first array")
@@ -113,17 +139,7 @@ while True:
         if len(resulting_array) == 0:
             print("There is no negative products")
             continue
-        min_res = min(resulting_array)
-        max_res = max(resulting_array)
-
-        print("There are", len(resulting_array), "negative products of X(i) * Y(y)",
-              "\nMinimal element is", min_res,
-              "\nMaximal element is", max_res, '\n')
-
-        first_processed = array_processing(first_array, min_res, max_res)
-        print("First array after processing:", first_processed)
-        second_processed = array_processing(second_array, min_res, max_res)
-        print("Second array after processing:", second_processed, '\n')
+        min_max_manipulations(first_array, second_array, resulting_array)
 
     elif menu_option == 3:
         break
