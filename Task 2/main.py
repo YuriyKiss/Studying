@@ -9,13 +9,26 @@
 # Всі числа в масивах x та y, які рівні максимальному елементу, замінити на протилежне,
 # а ті числа, які дорівнюють мінімальному, замінити на нулі.
 import random
-from binary_search import binary_search
+from binary_search import *
 
 
 def validate_int(info):
     while True:
         try:
             num = int(input(info))
+            break
+        except ValueError:
+            print("WARNING - Please enter an integer.")
+    return num
+
+
+def validate_size(info):
+    while True:
+        try:
+            num = int(input(info))
+            if num <= 0:
+                print("Array should contain more than 0 elements.")
+                continue
             break
         except ValueError:
             print("WARNING - Please enter an integer.")
@@ -43,6 +56,60 @@ def array_processing(array, minimal_element, maximal_element):
     return array
 
 
+def find_min(array):
+    min_el = array[0]
+    for x in array:
+        if x < min_el:
+            min_el = x
+
+    return min_el
+
+
+def find_max(array):
+    max_el = array[0]
+    for x in array:
+        if x > max_el:
+            max_el = x
+
+    return max_el
+
+
+def min_max_manipulations(first, second, resulting):
+    min_res = find_min(resulting)
+    max_res = find_max(resulting)
+
+    print("There are", len(resulting), "negative products of X(i) * Y(y)",
+          "\nMinimal element is", min_res,
+          "\nMaximal element is", max_res, '\n')
+
+    first_processed = array_processing(first, min_res, max_res)
+    print("First array after processing:", first_processed)
+    second_processed = array_processing(second, min_res, max_res)
+    print("Second array after processing:", second_processed, '\n')
+
+
+def search(resulting):
+    print("Array of negative products:", resulting)
+    index_array = []
+    for i in range(0, len(resulting)):
+        index_array.append(i)
+
+    simultaneous_sort(resulting, index_array)
+
+    while True:
+        value = validate_int("\nWhich value's position we are looking for: ")
+        print("\nSorted array:      ", resulting)
+        print("Sorted index array:", index_array)
+        middle_el = binary_search(resulting, value)
+        if middle_el == -1:
+            print("There are no such value in the array")
+            continue
+        else:
+            print("\n", value, "is", index_array[middle_el], "element of an array\n")
+            several_elements(middle_el, resulting, index_array, value)
+        break
+
+
 while True:
     print('-' * 25, "MENU", '-' * 25)
     menu_option = validate_int("1. Input amount of random elements in both arrays\n"
@@ -55,12 +122,7 @@ while True:
         continue
 
     elif menu_option == 1:
-        while True:
-            elements_amount = validate_int("How much elements you want to generate? ")
-            if elements_amount <= 0:
-                print("Array should contain more than 0 elements.")
-                continue
-            break
+        elements_amount = validate_size("How much elements you want to generate? ")
 
         first_array, second_array = [], []
         lower_rand = validate_int("Input lower limit for generating: ")
@@ -78,58 +140,12 @@ while True:
         if len(resulting_array) == 0:
             print("There is no negative products")
             continue
-        min_res = min(resulting_array)
-        max_res = max(resulting_array)
+        min_max_manipulations(first_array, second_array, resulting_array)
 
-        print("There are", len(resulting_array), "negative products of X(i) * Y(y)",
-              "\nMinimal element is", min_res,
-              "\nMaximal element is", max_res, '\n')
+        search(resulting_array)
 
-        first_processed = array_processing(first_array, min_res, max_res)
-        print("First array after processing:", first_processed)
-        second_processed = array_processing(second_array, min_res, max_res)
-        print("Second array after processing:", second_processed, '\n')
-
-        print("Array of negative products:", resulting_array)
-        index_array = []
-        for i in range(0, len(resulting_array)):
-            index_array.append(i)
-
-        for i in range(0, len(resulting_array) - 1):
-            for j in range(0, len(resulting_array) - i - 1):
-                if resulting_array[j] > resulting_array[j + 1]:
-                    resulting_array[j], resulting_array[j+1] = resulting_array[j+1], resulting_array[j]
-                    index_array[j], index_array[j+1] = index_array[j+1], index_array[j]
-
-
-        while True:
-            value = validate_int("\nWhich value's position we are looking for: ")
-            print("\nSorted array:      ", resulting_array)
-            print("Sorted index array:", index_array)
-            middle_el = binary_search(resulting_array, value)
-            if middle_el == -1:
-                print("There are no such value in the array")
-                continue
-            else:
-                print("\n", value, "is", index_array[middle_el], "element of an array\n")
-                for i in range(middle_el - 1, -1, -1):
-                    if resulting_array[middle_el] == resulting_array[i] and i != middle_el:
-                        print("Also,", value, "found on", index_array[i], "before first appearance of element")
-                    else:
-                        break
-                for i in range(middle_el + 1, len(resulting_array)):
-                    if resulting_array[middle_el] == resulting_array[i] and i != middle_el:
-                        print("Also,", value, "found on", index_array[i], "after first appearance of element")
-                    else:
-                        break
-                break
     elif menu_option == 2:
-        while True:
-            size = validate_int("How much elements you want to be in array? ")
-            if size <= 0:
-                print("Array should contain more than 0 elements.")
-                continue
-            break
+        size = validate_size("How much elements you want to input? ")
 
         first_array, second_array = [], []
         print("Enter elements of first array")
@@ -147,50 +163,9 @@ while True:
         if len(resulting_array) == 0:
             print("There is no negative products")
             continue
-        min_res = min(resulting_array)
-        max_res = max(resulting_array)
-        
-        print("There are", len(resulting_array), "negative products of X(i) * Y(y)",
-              "\nMinimal element is", min_res,
-              "\nMaximal element is", max_res, '\n')
-        
-        first_processed = array_processing(first_array, min_res, max_res)
-        print("First array after processing:", first_processed)
-        second_processed = array_processing(second_array, min_res, max_res)
-        print("Second array after processing:", second_processed, '\n')
+        min_max_manipulations(first_array, second_array, resulting_array)
 
-        print("Array of negative products:", resulting_array)
-        index_array = []
-        for i in range(0, len(resulting_array)):
-            index_array.append(i)
-
-        for i in range(0, len(resulting_array) - 1):
-            for j in range(0, len(resulting_array) - i - 1):
-                if resulting_array[j] > resulting_array[j + 1]:
-                    resulting_array[j], resulting_array[j + 1] = resulting_array[j + 1], resulting_array[j]
-                    index_array[j], index_array[j + 1] = index_array[j + 1], index_array[j]
-
-        while True:
-            value = validate_int("\nWhich value's position we are looking for: ")
-            print("\nSorted array:      ", resulting_array)
-            print("Sorted index array:", index_array)
-            middle_el = binary_search(resulting_array, value)
-            if middle_el == -1:
-                print("There are no such value in the array")
-                continue
-            else:
-                print("\n", value, "is", index_array[middle_el], "element of an array\n")
-                for i in range(middle_el - 1, -1, -1):
-                    if resulting_array[middle_el] == resulting_array[i] and i != middle_el:
-                        print("Also,", value, "found on", index_array[i], "before first appearance of element")
-                    else:
-                        break
-                for i in range(middle_el + 1, len(resulting_array)):
-                    if resulting_array[middle_el] == resulting_array[i] and i != middle_el:
-                        print("Also,", value, "found on", index_array[i], "after first appearance of element")
-                    else:
-                        break
-                break
+        search(resulting_array)
 
     elif menu_option == 3:
         break
