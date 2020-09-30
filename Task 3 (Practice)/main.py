@@ -1,3 +1,5 @@
+# Завдання №3. Linked List. Переписати завдання за допомогою Linked List.
+
 # Завдання повинно бути виконано з мінімальною кількістю операцій та з використанням функцій.
 # Передбачити можливість 2 варіанти введення масивів:
 # ввести кількість елементів та згенерувати рандомні елементи, або ввести сам масив.
@@ -9,6 +11,7 @@
 # Всі числа в масивах x та y, які рівні максимальному елементу, замінити на протилежне,
 # а ті числа, які дорівнюють мінімальному, замінити на нулі.
 import random
+from linked_list import *
 
 
 def validate_int(info):
@@ -26,7 +29,7 @@ def validate_size(info):
         try:
             num = int(input(info))
             if num <= 0:
-                print("Array should contain more than 0 elements.")
+                print("List should contain more than 0 elements.")
                 continue
             break
         except ValueError:
@@ -35,38 +38,38 @@ def validate_size(info):
 
 
 def negative_products(first, second):
-    array_of_negatives = []
+    list_of_negatives = Linked_List()
 
     for i in first:
         for j in second:
             if i * j < 0:
-                array_of_negatives.append(i * j)
+                list_of_negatives.append(i * j)
 
-    return array_of_negatives
-
-
-def array_processing(array, minimal_element, maximal_element):
-    for i in range(0, len(array)):
-        if array[i] == minimal_element:
-            array[i] = 0
-        if array[i] == maximal_element:
-            array[i] *= (-1)
-
-    return array
+    return list_of_negatives
 
 
-def find_min(array):
-    min_el = array[0]
-    for x in array:
+def list_processing(linked, minimal_element, maximal_element):
+    for i in range(0, len(linked)):
+        if linked[i] == minimal_element:
+            linked[i] = 0
+        if linked[i] == maximal_element:
+            linked[i] *= (-1)
+
+    return linked
+
+
+def find_min(linked):
+    min_el = linked[0]
+    for x in linked:
         if x < min_el:
             min_el = x
 
     return min_el
 
 
-def find_max(array):
-    max_el = array[0]
-    for x in array:
+def find_max(linked):
+    max_el = linked[0]
+    for x in linked:
         if x > max_el:
             max_el = x
 
@@ -77,21 +80,28 @@ def min_max_manipulations(first, second, resulting):
     min_res = find_min(resulting)
     max_res = find_max(resulting)
 
-    print("There are", len(resulting), "negative products of X(i) * Y(y)",
+    print("\nThere are", len(resulting), "negative products of X(i) * Y(y)",
           "\nMinimal element is", min_res,
           "\nMaximal element is", max_res, '\n')
 
-    first_processed = array_processing(first, min_res, max_res)
-    print("First array after processing:", first_processed)
-    second_processed = array_processing(second, min_res, max_res)
-    print("Second array after processing:", second_processed, '\n')
+    print("...Processing lists...")
+    first_processed = list_processing(first, min_res, max_res)
+    second_processed = list_processing(second, min_res, max_res)
+    print_lists(first_processed, second_processed)
+
+
+def print_lists(first, second):
+    print("\nFirst list contains X(i):")
+    first.print()
+    print('Second list contains Y(i):')
+    second.print()
 
 
 # Main function start #
 while True:
     print('-' * 25, "MENU", '-' * 25)
-    menu_option = validate_int("1. Input amount of random elements in both arrays\n"
-                               "2. Input elements of each array\n"
+    menu_option = validate_int("1. Input amount of random elements in both lists\n"
+                               "2. Input elements of each list\n"
                                "3. Exit\n"
                                "INPUT: ")
 
@@ -102,44 +112,42 @@ while True:
     elif menu_option == 1:
         elements_amount = validate_size("How much elements you want to generate? ")
 
-        first_array, second_array = [], []
+        first_list, second_list = Linked_List(), Linked_List()
         lower_rand = validate_int("Input lower limit for generating: ")
         upper_rand = validate_int("Input upper limit for generating: ")
         if lower_rand > upper_rand:
             lower_rand, upper_rand = upper_rand, lower_rand
         for i in range(0, elements_amount):
-            first_array.append(random.randint(lower_rand, upper_rand))
-            second_array.append(random.randint(lower_rand, upper_rand))
+            first_list.append(random.randint(lower_rand, upper_rand))
+            second_list.append(random.randint(lower_rand, upper_rand))
 
-        print("\nFirst array contains:", first_array,
-              '\nSecond array contains:', second_array, '\n')
+        print_lists(first_list, second_list)
 
-        resulting_array = negative_products(first_array, second_array)
-        if len(resulting_array) == 0:
+        resulting_list = negative_products(first_list, second_list)
+        if len(resulting_list) == 0:
             print("There is no negative products")
             continue
-        min_max_manipulations(first_array, second_array, resulting_array)
+        min_max_manipulations(first_list, second_list, resulting_list)
 
     elif menu_option == 2:
         size = validate_size("How much elements you want to input? ")
 
-        first_array, second_array = [], []
-        print("Enter elements of first array")
+        first_list, second_list = Linked_List(), Linked_List()
+        print("Enter elements of first list")
         for i in range(0, size):
-            first_array.append(validate_int("[" + str(i) + "] = "))
+            first_list.append(validate_int("[" + str(i) + "] = "))
 
-        print("Enter elements of second array")
+        print("Enter elements of second list")
         for i in range(0, size):
-            second_array.append(validate_int("[" + str(i) + "] = "))
+            second_list.append(validate_int("[" + str(i) + "] = "))
 
-        print("\nFirst array contains: ", first_array,
-              '\nSecond array contains: ', second_array, '\n')
+        print_lists(first_list, second_list)
 
-        resulting_array = negative_products(first_array, second_array)
-        if len(resulting_array) == 0:
+        resulting_list = negative_products(first_list, second_list)
+        if len(resulting_list) == 0:
             print("There is no negative products")
             continue
-        min_max_manipulations(first_array, second_array, resulting_array)
+        min_max_manipulations(first_list, second_list, resulting_list)
 
     elif menu_option == 3:
         break
