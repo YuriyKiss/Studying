@@ -9,6 +9,7 @@
 # Всі числа в масивах x та y, які рівні максимальному елементу, замінити на протилежне,
 # а ті числа, які дорівнюють мінімальному, замінити на нулі.
 import random
+from binary_search import *
 
 
 def validate_int(info):
@@ -87,7 +88,30 @@ def min_max_manipulations(first, second, resulting):
     print("Second array after processing:", second_processed, '\n')
 
 
+def search(resulting):
+    print("Array of negative products:", resulting)
+    index_array = []
+    for i in range(0, len(resulting)):
+        index_array.append(i)
+
+    simultaneous_sort(resulting, index_array)
+
+    while True:
+        value = validate_int("\nWhich value's position we are looking for: ")
+        print("\nSorted array:      ", resulting)
+        print("Sorted index array:", index_array)
+        middle_el = binary_search(resulting, value)
+        if middle_el == -1:
+            print("There are no such value in the array")
+            continue
+        else:
+            print("\n", value, "is", index_array[middle_el], "element of an array\n")
+            several_elements(middle_el, resulting, index_array, value)
+        break
+
+
 # Main function start #
+
 while True:
     print('-' * 25, "MENU", '-' * 25)
     menu_option = validate_int("1. Input amount of random elements in both arrays\n"
@@ -120,6 +144,9 @@ while True:
             continue
         min_max_manipulations(first_array, second_array, resulting_array)
 
+        search(resulting_array)
+
+
     elif menu_option == 2:
         size = validate_size("How much elements you want to input? ")
 
@@ -140,6 +167,9 @@ while True:
             print("There is no negative products")
             continue
         min_max_manipulations(first_array, second_array, resulting_array)
+
+        search(resulting_array)
+
 
     elif menu_option == 3:
         break
