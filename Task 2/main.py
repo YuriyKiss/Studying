@@ -110,6 +110,8 @@ def search(resulting):
         break
 
 
+# Main function start #
+
 while True:
     print('-' * 25, "MENU", '-' * 25)
     menu_option = validate_int("1. Input amount of random elements in both arrays\n"
@@ -144,6 +146,7 @@ while True:
 
         search(resulting_array)
 
+
     elif menu_option == 2:
         size = validate_size("How much elements you want to input? ")
 
@@ -166,6 +169,7 @@ while True:
         min_max_manipulations(first_array, second_array, resulting_array)
 
         search(resulting_array)
+
 
     elif menu_option == 3:
         break
