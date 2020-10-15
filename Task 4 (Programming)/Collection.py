@@ -13,13 +13,20 @@ class Collection:
             string += str(self.array[i]) + "\n\n"
         return string
 
+    def get_array(self):
+        return self.array
+
     def read_a_file(self, file):
+        Validator.check_file_existence(file)
+
         lines = len(open(file).readlines())
         with open(file) as f:
             for i in range(0, lines):
                 self.array.append(Flight.read_json(f.readline()))
 
     def rewrite_a_file(self, file):
+        Validator.check_file_existence(file)
+
         string = ""
         for i in range(0, len(self.array)):
             string += self.array[i].data_to_json() + "\n"
@@ -30,6 +37,7 @@ class Collection:
         for i in range(0, len(self.array)):
             if id_info == self.array[i].get_id():
                 del self.array[i]
+                return
 
     def edit(self, id_info):
         for i in range(0, len(self.array)):
@@ -40,49 +48,28 @@ class Collection:
 
     def add(self):
         self.array.sort(key=operator.attrgetter("_id"))
-        self.array.append(Flight(self.array[len(self.array) - 1].get_id() + 1,
-                                 Validator.input_name("Departure Country:"), Validator.input_name("Arrival Country:"),
-                                 Validator.input_time("Departure Time:"), Validator.input_time("Arrival Time:"),
-                                 Validator.input_positive("Ticket price:"), Validator.input_name("Company:")))
+
+        new_item = Flight(1, "", "", "1970-01-01 00:00", "1970-01-01 00:00", 1, "")
+        new_item.edit()
+
+        setattr(new_item, "_id", self.array[len(self.array) - 1].get_id() + 1)
+
+        self.array.append(new_item)
 
     def sort(self, string):
-        self.array.sort(key=operator.attrgetter(string))
+        self.array.sort(key=lambda f: getattr(f, string).lower())
 
     def search(self, string):
         for i in range(0, len(self.array)):
             reply = ""
-            if str(self.array[i].get_id()).find(string) != -1:
-                reply += "Found occurrence of " + string + " in ID"
-            if str(self.array[i].get_departure_country()).find(string) != -1:
-                if reply == "":
-                    reply += "Found occurrence of " + string + " in Departure Country"
-                else:
-                    reply += " and Departure Country"
-            if str(self.array[i].get_arrival_country()).find(string) != -1:
-                if reply == "":
-                    reply += "Found occurrence of " + string + " in Arrival Country"
-                else:
-                    reply += " and Arrival Country"
-            if str(self.array[i].get_departure_time()).find(string) != -1:
-                if reply == "":
-                    reply += "Found occurrence of " + string + " in Departure Time"
-                else:
-                    reply += " and Departure Time"
-            if str(self.array[i].get_arrival_time()).find(string) != -1:
-                if reply == "":
-                    reply += "Found occurrence of " + string + " in Arrival Time"
-                else:
-                    reply += " and Arrival Time"
-            if str(self.array[i].get_ticket_price()).find(string) != -1:
-                if reply == "":
-                    reply += "Found occurrence of " + string + " in Price"
-                else:
-                    reply += " and Price"
-            if str(self.array[i].get_company()).find(string) != -1:
-                if reply == "":
-                    reply += "Found occurrence of " + string + " in Company"
-                else:
-                    reply += " and Company"
+
+            for keys, values in vars(self.array[i]).items():
+                if str(values).lower().find(string.lower()) != -1:
+                    if reply == "":
+                        reply += "Found occurrence of " + string + " in " + keys
+                    else:
+                        reply += " and " + keys
+
             if reply == "":
                 continue
             else:

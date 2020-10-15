@@ -29,26 +29,19 @@ def print_sort_options():
 def sorting_attribute(collection, num):
     if num > 8:
         print("Sort menu has only 8 options!")
-    if num == 1:
-        collection.sort("_id")
-    if num == 2:
-        collection.sort("_departure_country")
-    if num == 3:
-        collection.sort("_arrival_country")
-    if num == 4:
-        collection.sort("_departure_time")
-    if num == 5:
-        collection.sort("_arrival_time")
-    if num == 6:
-        collection.sort("_ticket_price")
-    if num == 7:
-        collection.sort("_company")
     if num == 8:
         return
 
+    i = 1
+    for key in vars(collection.get_array()[0]).keys():
+        if i == num:
+            collection.sort(key)
+            return
+        i += 1
+
 
 data = Collection()
-file = "data.txt"
+file = Validator.input_file("Name of the file: ")
 
 data.read_a_file(file)
 while True:

@@ -3,8 +3,8 @@ import json
 
 
 class Flight:
-    def __init__(self, _id, _departure_country, _arrival_country, _departure_time, _arrival_time, _ticket_price,
-                 _company):
+    def __init__(self,
+                 _id, _departure_country, _arrival_country, _departure_time, _arrival_time, _ticket_price, _company):
         self._id = Validator.check_positive(_id)
         self._departure_country = Validator.check_name(_departure_country)
         self._arrival_country = Validator.check_name(_arrival_country)
@@ -14,20 +14,30 @@ class Flight:
         self._company = Validator.check_name(_company)
 
     def __str__(self):
-        string = "Flight ID: " + str(self._id)
-        string += "\nDeparture from: " + self._departure_country + ". Arrival at: " + self._arrival_country
-        string += "\nDeparture time: " + self._departure_time + ". Arrival at: " + self._arrival_time
-        string += "\nTicket price: " + str(self._ticket_price) + " from " + self._company
+        string = ""
+        for attr, values in vars(self).items():
+            string += str(attr) + ": " + str(values) + "\n"
 
         return string
 
     def edit(self):
-        self._departure_country = Validator.input_name("Departure Country:")
-        self._arrival_country = Validator.input_name("Arrival Country:")
-        self._departure_time = Validator.input_time("Departure Time:")
-        self._arrival_time = Validator.input_time("Arrival Time:")
-        self._ticket_price = Validator.input_positive("Ticket price:")
-        self._company = Validator.input_name("Company:")
+        for attr, values in vars(self).items():
+            setattr(self, attr, input(attr + " = "))
+
+        self.object_validation()
+
+    def object_validation(self):
+        Validator.check_positive(self._id)
+        Validator.check_name(self._departure_country)
+        Validator.check_name(self._arrival_country)
+        Validator.check_time(self._departure_time)
+        Validator.check_time(self._arrival_time)
+        Validator.check_positive(self._ticket_price)
+        Validator.check_name(self._company)
+        Validator.compare_dates(self._departure_time, self._arrival_time)
+        Validator.check_country(self._arrival_country)
+        Validator.check_country(self._departure_country)
+        Validator.check_company(self._company)
 
     @classmethod
     def read_json(cls, line):
