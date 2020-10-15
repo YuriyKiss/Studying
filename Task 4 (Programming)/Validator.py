@@ -62,7 +62,7 @@ class Validator:
         if d1 < d2:
             return
         else:
-            print("Time Error: Departure happened later than Arrival!")
+            print("Time Error: " + d1 + " Departure happened later than " + d2 + " Arrival!")
 
     @staticmethod
     def input_file(message):

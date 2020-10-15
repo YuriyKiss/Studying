@@ -5,13 +5,15 @@ import json
 class Flight:
     def __init__(self,
                  _id, _departure_country, _arrival_country, _departure_time, _arrival_time, _ticket_price, _company):
-        self._id = Validator.check_positive(_id)
-        self._departure_country = Validator.check_name(_departure_country)
-        self._arrival_country = Validator.check_name(_arrival_country)
-        self._departure_time = Validator.check_time(_departure_time)
-        self._arrival_time = Validator.check_time(_arrival_time)
-        self._ticket_price = Validator.check_positive(_ticket_price)
-        self._company = Validator.check_name(_company)
+        self._id = _id
+        self._departure_country = _departure_country
+        self._arrival_country = _arrival_country
+        self._departure_time = _departure_time
+        self._arrival_time = _arrival_time
+        self._ticket_price = _ticket_price
+        self._company = _company
+
+        self.object_validation()
 
     def __str__(self):
         string = ""
@@ -21,8 +23,11 @@ class Flight:
         return string
 
     def edit(self):
+        id = self._id
         for attr, values in vars(self).items():
             setattr(self, attr, input(attr + " = "))
+
+        setattr(self, "_id", id)
 
         self.object_validation()
 

@@ -49,7 +49,7 @@ class Collection:
     def add(self):
         self.array.sort(key=operator.attrgetter("_id"))
 
-        new_item = Flight(1, "", "", "1970-01-01 00:00", "1970-01-01 00:00", 1, "")
+        new_item = Flight(1, "Ukraine", "Ukraine", "1970-01-01 00:00", "1970-01-01 00:01", 1, "ANA")
         new_item.edit()
 
         setattr(new_item, "_id", self.array[len(self.array) - 1].get_id() + 1)
