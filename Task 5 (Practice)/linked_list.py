@@ -21,7 +21,19 @@ class Linked_List:
         return text
 
     def __len__(self):
+        if self.head is None:
+            self.__count = 0
         return self.__count
+
+    def __iter__(self):
+        curr = self.head
+        while curr is not None:
+            yield curr.data
+            curr = curr.next
+
+    def peek(self):
+        if self.head is not None:
+            return self.head.data
 
     def insert(self, index, data):
         if index == 0:
@@ -66,6 +78,7 @@ class Linked_List:
         if pos == 0:
             self.head = temp.next
             temp = None
+            self.__count -= 1
             return
 
         for i in range(pos - 1):
@@ -78,11 +91,20 @@ class Linked_List:
         if temp.next is None:
             return
 
-        next = temp.next.next
-
+        for_next = temp.next.next
         temp.next = None
+        temp.next = for_next
 
-        temp.next = next
+        self.__count -= 1
+
+    def change(self, key, new):
+        curr = self.head
+
+        while curr is not None:
+            if curr.data == key:
+                curr.data = new
+
+            curr = curr.next
 
     def is_empty(self):
         if self.head is None:
