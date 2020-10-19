@@ -43,6 +43,9 @@ def the_task(first, second):
         print("One of the lists is empty")
         return
     resulting = negative_products(first, second)
+    if len(resulting) <= 0:
+        print("None negative products found")
+        return
 
     min_res = find_min(resulting)
     max_res = find_max(resulting)
