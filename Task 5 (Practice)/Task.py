@@ -13,7 +13,7 @@ def negative_products(first, second):
     return array_of_negatives
 
 
-def array_processing(op_list, minimal_element, maximal_element):
+def list_processing(op_list, minimal_element, maximal_element):
     op_list.change(minimal_element, 0)
     op_list.change(maximal_element, (-1) * maximal_element)
 
@@ -51,10 +51,8 @@ def the_task(first, second):
     max_res = find_max(resulting)
 
     print("There are", len(resulting), "negative products of X(i) * Y(y)",
-          "\nMinimal element is", min_res,
-          "\nMaximal element is", max_res, '\n')
+          "\n\nMinimal element is", min_res,
+          "\nMaximal element is", max_res)
 
-    first_processed = array_processing(first, min_res, max_res)
-    print("First array after processing:", first_processed)
-    second_processed = array_processing(second, min_res, max_res)
-    print("Second array after processing:", second_processed, '\n')
+    first = list_processing(first, min_res, max_res)
+    second = list_processing(second, min_res, max_res)

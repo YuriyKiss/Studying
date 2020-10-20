@@ -37,6 +37,7 @@ class Linked_List:
 
     def insert(self, index, data):
         if index == 0:
+            self.__count += 1
             new_node = Node(data)
             new_node.next = self.head
             self.head = new_node
