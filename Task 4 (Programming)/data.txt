@@ -1,0 +1,5 @@
+{"_id": 1, "_departure_country": "USA", "_arrival_country": "Japan", "_departure_time": "2020-10-07 14:00", "_arrival_time": "2020-10-07 20:00", "_ticket_price": 2500, "_company": "Wizzair"}
+{"_id": 2, "_departure_country": "Germany", "_arrival_country": "USA", "_departure_time": "2020-10-08 16:00", "_arrival_time": "2020-10-08 21:00", "_ticket_price": 1900, "_company": "Ryanair"}
+{"_id": 3, "_departure_country": "France", "_arrival_country": "Germany", "_departure_time": "2020-10-09 19:00", "_arrival_time": "2020-10-09 21:30", "_ticket_price": 700, "_company": "Wizzair"}
+{"_id": 4, "_departure_country": "Ukraine", "_arrival_country": "France", "_departure_time": "2020-10-10 21:00", "_arrival_time": "2020-10-10 22:30", "_ticket_price": 1100, "_company": "Ryanair"}
+{"_id": 5, "_departure_country": "England", "_arrival_country": "Italy", "_departure_time": "2020-10-08 16:30", "_arrival_time": "2020-10-08 21:30", "_ticket_price": 1700, "_company": "ANA"}
