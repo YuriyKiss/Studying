@@ -1,0 +1,24 @@
+John Doe
+1
+12
+20
+17
+30
+Lviv
+Kyiv
+John Doe
+2
+12
+20
+17
+30
+Lviv
+Kyiv
+Black Cat
+2
+13
+40
+14
+50
+Doluna
+Verkhovuna
