@@ -87,10 +87,13 @@ while True:
         state_name = Validator.input_name("How would you call this state: ")
 
         caretaker.backup(data, state_name)
+        data.rewrite_a_file(file)
     if menu_option == 9:
-        data = caretaker.undo()
+        data = caretaker.undo(data)
+        data.rewrite_a_file(file)
     if menu_option == 10:
         data = caretaker.redo()
+        data.rewrite_a_file(file)
     if menu_option == 11:
         caretaker.show_history()
     if menu_option == 12:

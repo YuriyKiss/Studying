@@ -18,10 +18,12 @@ class Memento:
 class Caretaker:
     def __init__(self, size):
         self._mementos = []
+        self._for_redo = []
         self._size = size
 
     def backup(self, data, name):
         print("Caretaker: Saving state...")
+        self._for_redo.clear()
         if len(self._mementos) < self._size:
             self._mementos.append(Memento(copy.deepcopy(data), name))
         else:
@@ -29,28 +31,21 @@ class Caretaker:
             self._mementos.append(Memento(copy.deepcopy(data), name))
 
     def redo(self):
-        if not len(self._mementos):
+        if not len(self._for_redo):
             print("There are no saved states")
             return
 
-        self.show_history()
-        while True:
-            pos = Valid.input_positive("Choose state to restore: ")
-            if pos > self._size or pos > len(self._mementos):
-                print("There is no such state")
-                continue
-            else:
-                memento = self._mementos[pos - 1]
-                break
-
-        print("Restoring state to: " + memento.get_name())
+        memento = self._for_redo.pop()
+        print("Restoring state to:" + memento.get_name())
 
         return memento.get_state()
 
-    def undo(self):
+    def undo(self, data):
         if not len(self._mementos):
             print("There are no saved states")
             return
+
+        self._for_redo.append(Memento(copy.deepcopy(data), "Redo"))
 
         memento = self._mementos.pop()
         print("Restoring state to:" + memento.get_name())
@@ -58,6 +53,10 @@ class Caretaker:
         return memento.get_state()
 
     def show_history(self):
+        if not len(self._mementos):
+            print("There are no saved states")
+            return
+
         print("Here's the list of mementos:")
         i = 1
         for memento in self._mementos:
