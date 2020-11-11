@@ -1,6 +1,6 @@
 from datetime import datetime
-from Validator import Validator as Valid
 import copy
+
 
 class Memento:
     def __init__(self, state, name):
@@ -21,6 +21,9 @@ class Caretaker:
         self._for_redo = []
         self._size = size
 
+    def get_count_of_mementos(self):
+        return len(self._mementos)
+
     def backup(self, data, name):
         print("Caretaker: Saving state...")
         self._for_redo.clear()
@@ -36,7 +39,7 @@ class Caretaker:
             return
 
         memento = self._for_redo.pop()
-        print("Restoring state to:" + memento.get_name())
+        print("Restoring state to: " + memento.get_name())
 
         return memento.get_state()
 
@@ -48,7 +51,7 @@ class Caretaker:
         self._for_redo.append(Memento(copy.deepcopy(data), "Redo"))
 
         memento = self._mementos.pop()
-        print("Restoring state to:" + memento.get_name())
+        print("Restoring state to: " + memento.get_name())
 
         return memento.get_state()
 

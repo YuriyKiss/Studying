@@ -22,13 +22,6 @@ class Flight:
 
         return string
 
-    @Validator.check_obj
-    def edit(self):
-        for attr, values in vars(self).items():
-            if attr == "_id":
-                continue
-            setattr(self, attr, input(attr + " = "))
-
     @classmethod
     def read_json(cls, line):
         flight_object = Flight(**json.loads(line))
@@ -54,6 +47,9 @@ class Flight:
 
     @Validator.compare_dates
     def compare_dates(self, d1, d2):
+        self._departure_time = d1
+        self._arrival_time = d2
+
         return self
 
     @Validator.check_positive
@@ -61,12 +57,10 @@ class Flight:
         self._id = id_num
 
     @Validator.check_country
-    @Validator.check_name
     def set_departure_country(self, text):
         self._departure_country = text
 
     @Validator.check_country
-    @Validator.check_name
     def set_arrival_country(self, text):
         self._arrival_country = text
 
@@ -84,6 +78,5 @@ class Flight:
         self._ticket_price = num
 
     @Validator.check_company
-    @Validator.check_name
     def set_company(self, text):
         self._company = text

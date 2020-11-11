@@ -1,20 +1,21 @@
 from Collection import Collection
 from Validator import Validator
+from Flight import Flight
 import memento
 
 
 def print_menu_options():
     print("-" * 25, "MENU", "-" * 25)
     print("1. Print current collection of Flights")
-    print("2. Search the collection for an element")  # UnitTest - DONE
-    print("3. Sort the collection by attribute")      # UnitTest - DONE
-    print("4. Add an element")                        # UnitTest
-    print("5. Change an element by ID")               # UnitTest
-    print("6. Delete an element by ID")               # UnitTest
+    print("2. Search the collection for an element")
+    print("3. Sort the collection by attribute")
+    print("4. Add an element")
+    print("5. Change an element by ID")
+    print("6. Delete an element by ID")
     print("7. Save current collection to file")
-    print("8. Save current state")                    # UnitTest
-    print("9. Undo")                                  # UnitTest
-    print("10. Redo")                                 # UnitTest
+    print("8. Save current state")
+    print("9. Undo")
+    print("10. Redo")
     print("11. Show all saved states")
     print("12. Exit")
 
@@ -43,6 +44,17 @@ def sorting_attribute(collection, num):
             collection.sort(key)
             return
         i += 1
+
+
+def create_flight(data_):
+    new_item = Flight(1, "Ukraine", "Ukraine", "1970-01-01 00:00", "1970-01-01 00:01", 1, "ANA")
+    for attr, value in vars(new_item).items():
+        if attr == "_id":
+            continue
+        setattr(new_item, attr, input(attr + " = "))
+    setattr(new_item, "_id", data_.get_array()[len(data_.get_array()) - 1].get_id() + 1)
+
+    return new_item
 
 
 data = Collection()
@@ -75,10 +87,12 @@ while True:
 
         sorting_attribute(data, sort_option)
     if menu_option == 4:
-        data.add()
+        data.add(create_flight(data), None)
+        data.clear_file()
     if menu_option == 5:
         ID = Validator.input_positive("Which ID we are changing... ")
-        data.edit(ID)
+        data.edit(create_flight(data), ID)
+        data.clear_file()
     if menu_option == 6:
         ID = Validator.input_positive("Which ID we are deleting... ")
         data.remove(ID)

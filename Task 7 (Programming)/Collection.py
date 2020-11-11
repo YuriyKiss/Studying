@@ -1,6 +1,5 @@
 from Flight import Flight
 from Validator import Validator
-import operator
 
 
 class Collection:
@@ -16,6 +15,18 @@ class Collection:
     def get_array(self):
         return self.array
 
+    def clear_file(self):
+        length = len(self.array)
+        for j in range(length):
+            for i in self.array:
+                ids = 0
+                for keys, values in vars(i).items():
+                    if keys == "_id":
+                        ids = values
+                    if values == -1 or values == "a":
+                        self.remove(ids)
+                        break
+
     @Validator.check_file_existence
     def read_a_file(self, file):
         fl = open(file)
@@ -23,8 +34,9 @@ class Collection:
         with open(file) as f:
             for i in range(0, lines):
                 self.array.append(Flight.read_json(f.readline()))
-
         fl.close()
+
+        self.clear_file()
 
     @Validator.check_file_existence
     def rewrite_a_file(self, file):
@@ -39,23 +51,20 @@ class Collection:
             if id_info == self.array[i].get_id():
                 del self.array[i]
                 return
+        print("Such ID doesn't exist")
 
-    def edit(self, id_info):
+    @Validator.check_object
+    def add(self, flight, x=None):
+        self.array.append(flight)
+
+    @Validator.check_object
+    def edit(self, edited_data, id_info):
         for i in range(0, len(self.array)):
             if id_info == self.array[i].get_id():
-                self.array[i].edit()
+                self.array[i] = edited_data
+                self.array[i].set_id(id_info)
                 return
         print("None Flight with ID " + str(id_info) + " has been found")
-
-    def add(self):
-        self.array.sort(key=operator.attrgetter("_id"))
-
-        new_item = Flight(1, "Ukraine", "Ukraine", "1970-01-01 00:00", "1970-01-01 00:01", 1, "ANA")
-        new_item.edit()
-
-        setattr(new_item, "_id", self.array[len(self.array) - 1].get_id() + 1)
-
-        self.array.append(new_item)
 
     def sort(self, string):
         if string != "_id" and string != "_ticket_price":
