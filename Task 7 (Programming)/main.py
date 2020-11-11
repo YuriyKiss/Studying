@@ -6,15 +6,15 @@ import memento
 def print_menu_options():
     print("-" * 25, "MENU", "-" * 25)
     print("1. Print current collection of Flights")
-    print("2. Search the collection for an element")
-    print("3. Sort the collection by attribute")
-    print("4. Add an element")
-    print("5. Change an element by ID")
-    print("6. Delete an element by ID")
+    print("2. Search the collection for an element")  # UnitTest - DONE
+    print("3. Sort the collection by attribute")      # UnitTest - DONE
+    print("4. Add an element")                        # UnitTest
+    print("5. Change an element by ID")               # UnitTest
+    print("6. Delete an element by ID")               # UnitTest
     print("7. Save current collection to file")
-    print("8. Save current state")
-    print("9. Undo")
-    print("10. Redo")
+    print("8. Save current state")                    # UnitTest
+    print("9. Undo")                                  # UnitTest
+    print("10. Redo")                                 # UnitTest
     print("11. Show all saved states")
     print("12. Exit")
 
@@ -66,7 +66,8 @@ while True:
     if menu_option == 2:
         search_for = input("We are looking for... ")
         print("\n")
-        data.search(search_for)
+        for keys, values in data.search(search_for).items():
+            print(values + "\n" + str(keys))
     if menu_option == 3:
         print_sort_options()
 

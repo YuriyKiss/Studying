@@ -18,10 +18,13 @@ class Collection:
 
     @Validator.check_file_existence
     def read_a_file(self, file):
-        lines = len(open(file).readlines())
+        fl = open(file)
+        lines = len(fl.readlines())
         with open(file) as f:
             for i in range(0, lines):
                 self.array.append(Flight.read_json(f.readline()))
+
+        fl.close()
 
     @Validator.check_file_existence
     def rewrite_a_file(self, file):
@@ -61,6 +64,8 @@ class Collection:
             self.array.sort(key=lambda f: getattr(f, string))
 
     def search(self, string):
+        dict_ans = {}
+
         for i in range(0, len(self.array)):
             reply = ""
 
@@ -74,4 +79,6 @@ class Collection:
             if reply == "":
                 continue
             else:
-                print(reply + "\n" + str(self.array[i]) + "\n")
+                dict_ans[self.array[i]] = reply
+
+        return dict_ans

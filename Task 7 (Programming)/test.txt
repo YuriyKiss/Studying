@@ -1,0 +1,3 @@
+{"_id": 1, "_departure_country": "England", "_arrival_country": "Germany", "_departure_time": "2020-10-12 21:00", "_arrival_time": "2020-10-12 22:15", "_ticket_price": 1100.0, "_company": "Ryanair"}
+{"_id": 2, "_departure_country": "USA", "_arrival_country": "Ukraine", "_departure_time": "2020-10-11 21:00", "_arrival_time": "2020-10-11 22:59", "_ticket_price": 2200.0, "_company": "ANA"}
+{"_id": 3, "_departure_country": "Italy", "_arrival_country": "France", "_departure_time": "2021-11-07 14:00", "_arrival_time": "2021-11-07 16:00", "_ticket_price": 850.0, "_company": "EVA"}
