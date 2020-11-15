@@ -7,6 +7,7 @@ from Task import the_task
 from Observer import Logger, Observer
 from copy import deepcopy
 
+
 def initialization():
     print("-"*30 + "INITIALIZATION" + 30*"-")
     log_to = Valid.input_file("File to log all list changes: ")
