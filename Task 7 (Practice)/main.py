@@ -9,6 +9,16 @@ from copy import deepcopy
 from threading import Thread
 
 
+def two_threads(target, **kwargs):
+    first_thread = Thread(target=target, args=kwargs['first'])
+    second_thread = Thread(target=target, args=kwargs['second'])
+
+    first_thread.start()
+    second_thread.start()
+    first_thread.join()
+    second_thread.join()
+
+
 def initialization():
     print("-"*30 + "INITIALIZATION" + 30*"-")
     log_to = Valid.input_file("File to log all list changes: ")
@@ -74,13 +84,8 @@ def main_menu():
                 print("P stands for position of removing (0; " + str(len(first)) + ")")
                 position = Valid.input_int_in_bounds("P = ", 0, len(first))
 
-            first_thread = Thread(target=remove_el, args=("First list", first, obs, position, 0))
-            second_thread = Thread(target=remove_el, args=("Second list", second, obs, position, 0))
-
-            first_thread.start()
-            second_thread.start()
-            first_thread.join()
-            second_thread.join()
+            two_threads(remove_el, first=("First list", first, obs, position, 0),
+                        second=("Second list", second, obs, position, 0))
         elif menu_option == 5:
             if len(first) > len(second):
                 print("L stands for left bound of removing (0; " + str(len(second)) + ")")
@@ -94,18 +99,13 @@ def main_menu():
 
                 print("R stands for right bound of removing (" + str(pos1) + "; " + str(len(first)) + ")")
                 pos2 = Valid.input_int_in_bounds("R = ", pos1, len(first))
-
-            first_thread = Thread(target=remove_few, args=("First list", first, obs, pos1, pos2))
-            second_thread = Thread(target=remove_few, args=("Second list", second, obs, pos1, pos2))
-
-            first_thread.start()
-            second_thread.start()
-            first_thread.join()
-            second_thread.join()
+            
+            two_threads(remove_few, first=("First list", first, obs, pos1, pos2),
+                        second=("Second list", second, obs, pos1, pos2))
         elif menu_option == 6:
             the_task(first, second)
         elif menu_option == 7:
-            print_lists(first, second)
+            two_threads(print, first=("1. ", str(first)), second=("2. ", str(second)))
         elif menu_option == 8:
             break
 
@@ -160,16 +160,6 @@ def remove_few(name, op_list, obs, pos1, pos2):
         op_list.remove(pos1)
 
     obs.dispatch(name, "remove_from_list", arr, original, op_list)
-
-
-def print_lists(first, second):
-    first_thread = Thread(target=print, args=("1. ", str(first)))
-    second_thread = Thread(target=print, args=("2. ", str(second)))
-
-    first_thread.start()
-    second_thread.start()
-    first_thread.join()
-    second_thread.join()
 
 
 main_menu()

@@ -1,8 +1,8 @@
-First list has been adjusted by reading data from log.txt and inserting it at 0 position
+First list has been adjusted by generating 10 elements and inserting them at 0 position
 List at start: []
-List at end: [10, -30, 0, -1]
+List at end: [3, 7, 11, 29, 47, 199, 521, 2207, 3571, 9349]
 
 Second list has been adjusted by reading data from log.txt and inserting it at 0 position
 List at start: []
-List at end: [1, -3, 0, -3]
+List at end: [12, -3, 0, 15, 4, 7, -2, 92, 10, 21, 36, -2, -5, 82, 1, 5, 7, 12, 5, -3, 35]
 
