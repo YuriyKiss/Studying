@@ -40,6 +40,8 @@ def get_flights():
     sort_by = request.args.get("sort_by", type=str)
     sort_type = request.args.get("sort_type", type=str)
     search = request.args.get("search", type=str)
+    offset = request.args.get("offset", type=int)
+    limit = request.args.get("limit", type=int)
 
     all_flights = Flight.query
 
@@ -59,10 +61,15 @@ def get_flights():
                                              cast(Flight.arrival_time, db.String).like(f"%{search}%"),
                                              cast(Flight.ticket_price, db.String).like(f"%{search}%"),
                                              Flight.company.like(f"%{search}%")))
+    if limit is None:
+        limit = 100
+    if offset is None:
+        offset = 1
+    paginate_flights = all_flights.paginate(offset, limit)
 
-    result = flights_schema.dump(all_flights)
+    result = flights_schema.dump(paginate_flights.items)
     return jsonify({"status": 200, "message": "Successfully got flights", "sort": [sort_by, sort_type],
-                    "search": search}, {"info": result}), 200
+                    "search": search, "count": len(paginate_flights.items)}, {"info": result}), 200
 
 
 # Get Single Flight
