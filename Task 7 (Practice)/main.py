@@ -8,15 +8,14 @@ from Observer import Logger, Observer
 from copy import deepcopy
 from threading import Thread
 
+counting_array = ['first', 'second', 'third', 'fourth', 'fifth']  # allows to use up to five threads
 
-def two_threads(target, **kwargs):
-    first_thread = Thread(target=target, args=kwargs['first'])
-    second_thread = Thread(target=target, args=kwargs['second'])
 
-    first_thread.start()
-    second_thread.start()
-    first_thread.join()
-    second_thread.join()
+def few_threads(amount, target, **kwargs):
+    for i in range(amount):
+        new_thread = Thread(target=target, args=kwargs[counting_array[i]])
+        new_thread.start()
+        new_thread.join()
 
 
 def initialization():
@@ -84,7 +83,7 @@ def main_menu():
                 print("P stands for position of removing (0; " + str(len(first)) + ")")
                 position = Valid.input_int_in_bounds("P = ", 0, len(first))
 
-            two_threads(remove_el, first=("First list", first, obs, position, 0),
+            few_threads(2, remove_el, first=("First list", first, obs, position, 0),
                         second=("Second list", second, obs, position, 0))
         elif menu_option == 5:
             if len(first) > len(second):
@@ -100,12 +99,12 @@ def main_menu():
                 print("R stands for right bound of removing (" + str(pos1) + "; " + str(len(first)) + ")")
                 pos2 = Valid.input_int_in_bounds("R = ", pos1, len(first))
             
-            two_threads(remove_few, first=("First list", first, obs, pos1, pos2),
+            few_threads(2, remove_few, first=("First list", first, obs, pos1, pos2),
                         second=("Second list", second, obs, pos1, pos2))
         elif menu_option == 6:
             the_task(first, second)
         elif menu_option == 7:
-            two_threads(print, first=("1. ", str(first)), second=("2. ", str(second)))
+            few_threads(2, print, first=("1. ", str(first)), second=("2. ", str(second)))
         elif menu_option == 8:
             break
 

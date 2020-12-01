@@ -38,7 +38,7 @@ class Logger:
             elif isinstance(changer, list):
                 f.write(" removing elements at positions " + str(changer) + "\n")
             elif Validator.check_file(changer):
-                f.write(" has been adjusted by reading data from " + file_path + " and inserting it at "
+                f.write(" has been adjusted by reading data from " + changer + " and inserting it at "
                         + str(position) + " position\n")
             else:
                 f.write(" has been adjusted by generating " + str(changer) +
