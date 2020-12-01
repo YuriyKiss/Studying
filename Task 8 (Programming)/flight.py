@@ -14,6 +14,8 @@ class MyDateTime(db.TypeDecorator):
 
 # Flight Class/Model
 class Flight(db.Model):
+    __tablename__ = "flights"
+
     id = db.Column(db.Integer, primary_key=True)
     departure_country = db.Column(db.String(50))
     arrival_country = db.Column(db.String(50))

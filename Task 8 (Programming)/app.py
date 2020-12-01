@@ -9,7 +9,8 @@ import psycopg2
 app = Flask(__name__)  # Init Application
 
 basedir = os.path.abspath(os.path.dirname(__file__))  # Get DB directory
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + os.path.join(basedir, 'db.sqlite')  # Connect app and DB
+# Connect app and DB
+app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql+psycopg2://postgres:1234@localhost:5432/homework'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 db = SQLAlchemy(app)  # Init DB
