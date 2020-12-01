@@ -6,6 +6,16 @@ from linked_list import Linked_List as List
 from Task import the_task
 from Observer import Logger, Observer
 from copy import deepcopy
+from threading import Thread
+
+counting_array = ['first', 'second', 'third', 'fourth', 'fifth']  # allows to use up to five threads
+
+
+def few_threads(amount, target, **kwargs):
+    for i in range(amount):
+        new_thread = Thread(target=target, args=kwargs[counting_array[i]])
+        new_thread.start()
+        new_thread.join()
 
 
 def initialization():
@@ -65,21 +75,37 @@ def main_menu():
                 modify_list("First list", first, cont, obs)
             else:
                 modify_list("Second list", second, cont, obs)
-        if menu_option == 4:
-            if choose_list():
-                remove_el("First list", first, obs)
+        elif menu_option == 4:
+            if len(first) > len(second):
+                print("P stands for position of removing (0; " + str(len(second)) + ")")
+                position = Valid.input_int_in_bounds("P = ", 0, len(second))
             else:
-                remove_el("Second list", second, obs)
-        if menu_option == 5:
-            if choose_list():
-                remove_few("First list", first, obs)
+                print("P stands for position of removing (0; " + str(len(first)) + ")")
+                position = Valid.input_int_in_bounds("P = ", 0, len(first))
+
+            few_threads(2, remove_el, first=("First list", first, obs, position, 0),
+                        second=("Second list", second, obs, position, 0))
+        elif menu_option == 5:
+            if len(first) > len(second):
+                print("L stands for left bound of removing (0; " + str(len(second)) + ")")
+                pos1 = Valid.input_int_in_bounds("L = ", 0, len(second))
+
+                print("R stands for right bound of removing (" + str(pos1) + "; " + str(len(second)) + ")")
+                pos2 = Valid.input_int_in_bounds("R = ", pos1, len(second))
             else:
-                remove_few("Second list", second, obs)
-        if menu_option == 6:
+                print("L stands for left bound of removing (0; " + str(len(first)) + ")")
+                pos1 = Valid.input_int_in_bounds("L = ", 0, len(first))
+
+                print("R stands for right bound of removing (" + str(pos1) + "; " + str(len(first)) + ")")
+                pos2 = Valid.input_int_in_bounds("R = ", pos1, len(first))
+            
+            few_threads(2, remove_few, first=("First list", first, obs, pos1, pos2),
+                        second=("Second list", second, obs, pos1, pos2))
+        elif menu_option == 6:
             the_task(first, second)
-        if menu_option == 7:
-            print_lists(first, second)
-        if menu_option == 8:
+        elif menu_option == 7:
+            few_threads(2, print, first=("1. ", str(first)), second=("2. ", str(second)))
+        elif menu_option == 8:
             break
 
 
@@ -98,6 +124,7 @@ def choose_list():
 
 
 def modify_list(name, op_list, cont, obs):
+    print(f"Generating {name}")
     print("P stands for position of inserting(0; " + str(len(op_list)) + ")")
     position = Valid.input_int_in_bounds("P = ", 0, len(op_list))
 
@@ -116,22 +143,14 @@ def modify_list(name, op_list, cont, obs):
 
 
 @Valid.check_op_list
-def remove_el(name, op_list, obs):
-    print("P stands for position of removing (0; " + str(len(op_list)) + ")")
-    position = Valid.input_int_in_bounds("P = ", 0, len(op_list))
-
+def remove_el(name, op_list, obs, position, x):
     original = deepcopy(op_list)
     op_list.remove(position)
     obs.dispatch(name, "remove_from_list", position, original, op_list)
 
 
 @Valid.check_op_list
-def remove_few(name, op_list, obs):
-    print("L stands for left bound of removing (0; " + str(len(op_list)) + ")")
-    pos1 = Valid.input_int_in_bounds("L = ", 0, len(op_list))
-
-    print("R stands for right bound of removing (" + str(pos1) + "; " + str(len(op_list)) + ")")
-    pos2 = Valid.input_int_in_bounds("R = ", pos1, len(op_list))
+def remove_few(name, op_list, obs, pos1, pos2):
     original = deepcopy(op_list)
 
     arr = []
@@ -140,11 +159,6 @@ def remove_few(name, op_list, obs):
         op_list.remove(pos1)
 
     obs.dispatch(name, "remove_from_list", arr, original, op_list)
-
-
-def print_lists(first, second):
-    print("1. " + str(first))
-    print("2. " + str(second))
 
 
 main_menu()
