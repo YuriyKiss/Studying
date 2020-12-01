@@ -1,3 +1,5 @@
+# Import application, database, Flight model and scheme, validator file and functions from flask and sqlalchemy
+# to operate with queries
 from app import app, db
 from flight import Flight, FlightSchema
 
@@ -5,7 +7,7 @@ from flask import request, jsonify
 from sqlalchemy import desc, cast, text, or_
 from validation.validator import Validator
 
-# Init schema
+# Initialize schemas
 flight_schema = FlightSchema()
 flights_schema = FlightSchema(many=True)
 
@@ -15,7 +17,7 @@ flights_schema = FlightSchema(many=True)
 def add_flight():
     for a in Flight.query:
         if request.json["id"] == a.id:
-            return jsonify({'status': 404, 'errors': "ID already exits"}), 404
+            return jsonify({'status': 404, 'error': "ID already exits"}), 404
 
     data = []
     for a in Flight.get_attributes():
@@ -45,26 +47,21 @@ def get_flights():
 
     all_flights = Flight.query
 
-    if sort_by != any(Flight.get_attributes()):
-        sort_by = None
+    for i in Flight.get_attributes():
+        if i == sort_by:
+            break
+        if i == "company":
+            sort_by = None
 
-    if sort_type and sort_by and sort_type == "desc":
+    if sort_by and sort_type == "desc":
         all_flights = all_flights.order_by(desc(sort_by))
     elif sort_by:
         all_flights = all_flights.order_by(text(sort_by))
 
-    if search:
-        all_flights = all_flights.filter(or_(cast(Flight.id, db.String).like(f"%{search}%"),
-                                             Flight.departure_country.like(f"%{search}%"),
-                                             Flight.arrival_country.like(f"%{search}%"),
-                                             cast(Flight.departure_time, db.String).like(f"%{search}%"),
-                                             cast(Flight.arrival_time, db.String).like(f"%{search}%"),
-                                             cast(Flight.ticket_price, db.String).like(f"%{search}%"),
-                                             Flight.company.like(f"%{search}%")))
-    if limit is None:
-        limit = 100
-    if offset is None:
-        offset = 1
+    if search:  # На цей запис я витратив набагато більше часу, ніж того хотів би
+        all_flights = all_flights.filter(or_(*[cast(getattr(Flight, x), db.String).like(f"%{search}%") \
+                                               for x in Flight.get_attributes()]))
+
     paginate_flights = all_flights.paginate(offset, limit)
 
     result = flights_schema.dump(paginate_flights.items)
