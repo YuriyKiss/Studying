@@ -1,3 +1,4 @@
+import re
 import datetime
 import validation.enums
 
@@ -11,6 +12,35 @@ class Validator:
             return {"status": 404, "message": "Flight not found"}, {"info": "Such ID doesn't exist"}
         else:
             return None
+
+    @staticmethod
+    def check_name(func):
+        def func_wrapper(self, string):
+            if not all(x.isalpha() or x.isspace() for x in string):
+                print("First and last name should only contain alphabetic symbols")
+            func(self, string)
+
+        return func_wrapper
+
+    @staticmethod
+    def check_email(func):
+        def func_wrapper(self, string):
+            if re.match('[a-zA-Z0-9._]{3,16}[@]\w{3,6}[.]\w{2,3}([.]((ua)|(uk)))?', string):
+                func(self, string)
+            else:
+                func(self, None)
+
+        return func_wrapper
+
+    @staticmethod
+    def check_pass(func):
+        def func_wrapper(self, string):
+            if re.match("\S{6,16}", string):
+                func(self, string)
+            else:
+                func(self, None)
+
+        return func_wrapper
 
     @staticmethod
     def check_positive(func):

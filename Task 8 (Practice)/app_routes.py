@@ -1,15 +1,19 @@
 # Import application, database, Flight model and scheme, validator file and functions from flask and sqlalchemy
 # to operate with queries
-from app import app, db
+from app import app, db, login_m
 from flight import Flight, FlightSchema
+from user import User, UserSchema
 
 from flask import request, jsonify
+from flask_login import logout_user
 from sqlalchemy import desc, cast, text, or_
 from validation.validator import Validator
 
 # Initialize schemas
 flight_schema = FlightSchema()
 flights_schema = FlightSchema(many=True)
+
+user_schema = UserSchema()
 
 
 # Create a Flight
@@ -118,6 +122,50 @@ def delete_flight(id_):
 
     data = flight_schema.dump(flight)
     return jsonify({"status": 200, "message": "Flight has been successfully deleted"}, {"info": data}), 200
+
+
+# ------------------------------------------------------------------------------------------------------------ #
+@app.route('/api/users', methods=['POST'])
+def register_user():
+    data = [User.query.count() + 1]
+    for a in User.get_attributes():
+        if a != "id":
+            data.append(request.json[a])
+
+    new_user = User(*data)
+
+    respond = new_user.get_data_integrity()
+    if not respond == []:
+        return jsonify({'status': 404, 'errors': respond}), 404
+
+    db.session.add(new_user)
+    db.session.commit()
+
+    info = user_schema.dump(new_user)
+    return jsonify({'status': 201, 'message': 'User created successfully'}, {'user_info': info}), 201
+
+
+@app.route('/api/login', methods=['POST'])
+def login_user():
+    for user in User.query:
+        if user.get_mail() != request.json["email"]:
+            continue
+        else:
+            if user.get_pass() == request.json["password"]:
+                login(user.get_id())
+                return jsonify({'status': 201, 'message': 'User logged in successfully'}), 201
+    return jsonify({'status': 404, 'message': 'Either email or password is incorrect'}), 404
+
+
+@login_m.user_loader
+def login(u_id):
+    return User.query.get(u_id)
+
+
+@app.route('/api/logout', methods=['GET'])
+def logout():
+    logout_user()
+    return jsonify({'status': 200, 'message': "User log out successfully"}), 200
 
 
 # Run Server
