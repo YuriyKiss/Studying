@@ -22,6 +22,18 @@ class Flight:
 
         return string
 
+    def __eq__(self, other):
+        return self.get_id() == other.get_id() and \
+               self.get_departure_country() == other.get_departure_country() and \
+               self.get_arrival_country() == other.get_arrival_country() and \
+               self.get_departure_time() == other.get_departure_time() and \
+               self.get_arrival_time() == other.get_arrival_time() and \
+               self.get_ticket_price() == other.get_ticket_price() and \
+               self.get_company() == other.get_company()
+
+    def get_attributes(self):
+        return [attr for attr in vars(self)]
+
     @classmethod
     def read_json(cls, line):
         flight_object = Flight(**json.loads(line))

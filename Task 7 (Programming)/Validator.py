@@ -142,16 +142,16 @@ class Validator:
                     print("Exceeding array limit. Such ID doesn't exist")
                     return
             func(self, flight, x)
+            if x is None:
+                flight.set_id(self.get_array()[len(self.get_array()) - 1].get_id())
+                flight.set_departure_country(self.get_array()[len(self.get_array()) - 1].get_departure_country())
+                flight.set_arrival_country(self.get_array()[len(self.get_array()) - 1].get_arrival_country())
+                flight.set_departure_time(self.get_array()[len(self.get_array()) - 1].get_departure_time())
+                flight.set_arrival_time(self.get_array()[len(self.get_array()) - 1].get_arrival_time())
+                flight.set_ticket_price(self.get_array()[len(self.get_array()) - 1].get_ticket_price())
+                flight.set_company(self.get_array()[len(self.get_array()) - 1].get_company())
 
-            flight.set_id(self.get_array()[len(self.get_array()) - 1].get_id())
-            flight.set_departure_country(self.get_array()[len(self.get_array()) - 1].get_departure_country())
-            flight.set_arrival_country(self.get_array()[len(self.get_array()) - 1].get_arrival_country())
-            flight.set_departure_time(self.get_array()[len(self.get_array()) - 1].get_departure_time())
-            flight.set_arrival_time(self.get_array()[len(self.get_array()) - 1].get_arrival_time())
-            flight.set_ticket_price(self.get_array()[len(self.get_array()) - 1].get_ticket_price())
-            flight.set_company(self.get_array()[len(self.get_array()) - 1].get_company())
-
-            flight.compare_dates(self.get_array()[len(self.get_array()) - 1].get_departure_time(),
-                                 self.get_array()[len(self.get_array()) - 1].get_arrival_time())
+                flight.compare_dates(self.get_array()[len(self.get_array()) - 1].get_departure_time(),
+                                    self.get_array()[len(self.get_array()) - 1].get_arrival_time())
 
         return func_wrapper

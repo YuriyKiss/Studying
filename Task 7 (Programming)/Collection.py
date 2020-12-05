@@ -73,7 +73,7 @@ class Collection:
             self.array.sort(key=lambda f: getattr(f, string))
 
     def search(self, string):
-        dict_ans = {}
+        dict_ans = []
 
         for i in range(0, len(self.array)):
             reply = ""
@@ -88,6 +88,6 @@ class Collection:
             if reply == "":
                 continue
             else:
-                dict_ans[self.array[i]] = reply
+                dict_ans.append(self.array[i])
 
         return dict_ans
