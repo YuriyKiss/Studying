@@ -23,7 +23,7 @@ user_schema = UserSchema()
 def add_flight():
     for a in Flight.query:
         if request.json["id"] == a.id:
-            return jsonify({'status': 404, 'error': "ID already exits"}), 404
+            return jsonify({'status': 404, 'error': "ID already exits"})
 
     data = []
     for a in Flight.get_attributes():
@@ -35,13 +35,13 @@ def add_flight():
 
     respond = new_flight.get_data_integrity()
     if not respond == []:
-        return jsonify({'status': 404, 'errors': respond}), 404
+        return jsonify({'status': 404, 'errors': respond})
 
     db.session.add(new_flight)
     db.session.commit()
 
     data = flight_schema.dump(new_flight)
-    return jsonify({'status': 201, 'message': 'Flight created successfully'}, {'flight': data}), 201
+    return jsonify({'status': 201, 'message': 'Flight created successfully'}, {'flight': data})
 
 
 # Get All Flights
@@ -75,7 +75,7 @@ def get_flights():
 
     result = flights_schema.dump(paginate_flights.items)
     return jsonify({"status": 200, "message": "Successfully got flights", "sort": [sort_by, sort_type],
-                    "search": search, "count": len(paginate_flights.items)}, {"info": result}), 200
+                    "search": search, "count": len(paginate_flights.items)}, {"info": result})
 
 
 # Get Single Flight
@@ -84,85 +84,83 @@ def get_flights():
 def get_flight(id_):
     flight = Flight.query.filter_by(user_id=current_user.id, id=id_).first()
 
-    check = Validator.check_id(id_, flight)
-    if check is not None:
-        return jsonify(check), 404
+    if flight is not None:
+        return jsonify({"status": 200, "message": "Successfully found flight"},
+                       {"info": flight_schema.dump(flight)})
 
-    data = flight_schema.dump(flight)
-    return jsonify({"status": 200, "message": "Successfully found flight"}, {"info": data}), 200
+    return {'status': 404, 'error': "The flight has not been found"}
 
 
 # Update a Flight
 @app.route('/api/flights/<id_>', methods=['PUT'])
 @login_required
 def update_flight(id_):
-    update_f = Flight.query.get(id_)
+    flight = Flight.query.filter_by(user_id=current_user.id, id=id_).first()
 
-    check = Validator.check_id(id_, update_f)
-    if check is not None:
-        return jsonify(check), 404
+    if flight is not None:
+        for attr in Flight.get_attributes():
+            if attr != "user_id" and attr != "id":
+                getattr(flight, "set_" + attr)(request.json[attr])
 
-    for attr in Flight.get_attributes():
-        getattr(update_f, "set_" + attr)(request.json[attr])
+        respond = flight.get_data_integrity()
+        if not respond == []:
+            return jsonify({'status': 404, 'errors': respond})
 
-    respond = update_f.get_data_integrity()
-    if not respond == []:
-        return jsonify({'status': 404, 'errors': respond}), 404
+        db.session.commit()
 
-    db.session.commit()
+        return jsonify({"status": 200, "message": "Successfully changed flight"},
+                       {"info": flight_schema.dump(flight)})
 
-    data = flight_schema.dump(update_f)
-    return jsonify({"status": 200, "message": "Successfully changed flight"}, {"info": data}), 200
+    return {'status': 404, 'error': "The flight has not been found"}
 
 
 # Delete Flight
 @app.route('/api/flights/<id_>', methods=['DELETE'])
 @login_required
 def delete_flight(id_):
-    flight = Flight.query.get(id_)
+    flight = Flight.query.filter_by(id=id_, user_id=current_user.id).first()
 
-    check = Validator.check_id(id_, flight)
-    if check is not None:
-        return jsonify(check), 404
+    if flight is not None:
+        db.session.delete(flight)
+        db.session.commit()
 
-    db.session.delete(flight)
-    db.session.commit()
+        return jsonify({"status": 200, "message": "Flight has been successfully deleted"},
+                       {"info": flight_schema.dump(flight)})
 
-    data = flight_schema.dump(flight)
-    return jsonify({"status": 200, "message": "Flight has been successfully deleted"}, {"info": data}), 200
+    return {'status': 404, 'error': "The flight has not been found"}
 
 
 # ------------------------------------------------------------------------------------------------------------ #
 @app.route('/api/users', methods=['POST'])
 def register_user():
-    data = [User.query.count() + 1]
-    for a in User.get_attributes():
-        if a != "id":
-            data.append(request.json[a])
-
-    new_user = User(*data)
+    if User.query.filter_by(first_name=request.json["first_name"],
+                            last_name=request.json["last_name"]).first() is not None:
+        return jsonify({'status': 404, 'errors': "Such user already exist"})
+    if User.query.filter_by(email=request.json["email"]).first() is not None:
+        return jsonify({'status': 404, 'errors': "This email has already been used"})
+    new_user = User(*[User.query.count() + 1,
+                      *[request.json[f"{attr}"] for attr in User.get_attributes() if attr != "id"]])
 
     respond = new_user.get_data_integrity()
     if not respond == []:
-        return jsonify({'status': 404, 'errors': respond}), 404
+        return jsonify({'status': 404, 'errors': respond})
 
     db.session.add(new_user)
     db.session.commit()
 
-    info = user_schema.dump(new_user)
-    return jsonify({'status': 201, 'message': 'User created successfully'}, {'user_info': info}), 201
+    return jsonify({'status': 201, 'message': 'User created successfully'},
+                   {'user_info': user_schema.dump(new_user)})
 
 
 @app.route('/api/login', methods=['POST'])
 def login_u():
-    for user in User.query:
-        if user.get_mail() != request.json["email"]:
-            continue
-        else:
-            if validate(user.get_pass(), request.json["password"]):
-                login_user(user)
-                return jsonify({'status': 201, 'message': 'User logged in successfully'}), 200
-    return jsonify({'status': 404, 'message': 'Either email or password is incorrect'}), 404
+    user = User.query.filter_by(email=request.json["email"]).first()
+    if user is not None:
+        if validate(user.get_pass(), request.json["password"]):
+            login_user(user)
+            return jsonify({'status': 201, 'message': 'User logged in successfully'})
+    else:
+        return jsonify({'status': 404, 'message': 'Either email or password is incorrect'})
 
 
 @login_m.user_loader
@@ -174,7 +172,7 @@ def login(u_id):
 @login_required
 def logout():
     logout_user()
-    return jsonify({'status': 200, 'message': "User log out successfully"}), 200
+    return jsonify({'status': 200, 'message': "User log out successfully"})
 
 
 # Run Server

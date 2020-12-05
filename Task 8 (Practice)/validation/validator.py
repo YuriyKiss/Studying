@@ -83,16 +83,17 @@ class Validator:
     @staticmethod              # User Name validation
     def check_name(func):
         def func_wrapper(self, string):
-            if not all(x.isalpha() or x.isspace() for x in string):
-                print("First and last name should only contain alphabetic symbols")
-            func(self, string)
+            if not all(x.isalpha() for x in string):
+                func(self, None)
+            else:
+                func(self, string)
 
         return func_wrapper
 
     @staticmethod              # User Email validation
     def check_email(func):
         def func_wrapper(self, string):
-            if re.match('[a-zA-Z0-9._]{3,16}[@]\w{3,6}[.]\w{2,3}([.]((ua)|(uk)))?', string):
+            if re.match('[a-zA-Z0-9._]{3,16}[@][a-zA-Z]{3,6}[.][a-z]{2,3}([.]((ua)|(uk)))?', string):
                 func(self, string)
             else:
                 func(self, None)
