@@ -1,15 +1,9 @@
-import jwt
+from hashlib import pbkdf2_hmac
+import os
 
 app_key = '_5#y2L"F4Q8z.n_xec]/'
-secret_key = "cake_is_a_lie"
+salt = os.urandom(32)
 
 
 def encode(message):
-    info = jwt.encode({"pass": message}, secret_key, algorithm='HS256')
-    print(info)
-    print(type(info))
-    return info
-
-
-def decode(message):
-    return jwt.decode(message, secret_key, algorithms='HS256')["pass"]
+    return pbkdf2_hmac('sha256', message.encode('utf-8'), salt, 100000)

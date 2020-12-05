@@ -1,9 +1,10 @@
 from app import db, ma
-from nothing_to_look_at import encode, decode
+from nothing_to_look_at import encode
 from validation.validator import Validator
+from flask_login import UserMixin
 
 
-class User(db.Model):
+class User(db.Model, UserMixin):
     __tablename__ = "users"
 
     id = db.Column(db.Integer, primary_key=True)
@@ -35,7 +36,7 @@ class User(db.Model):
         return attributes
 
     def get_pass(self):
-        return decode(self.password)
+        return self.password
 
     def get_id(self):
         return self.id

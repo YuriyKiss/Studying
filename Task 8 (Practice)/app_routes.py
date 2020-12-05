@@ -3,9 +3,10 @@
 from app import app, db, login_m
 from flight import Flight, FlightSchema
 from user import User, UserSchema
+from nothing_to_look_at import encode
 
 from flask import request, jsonify
-from flask_login import logout_user
+from flask_login import login_user, logout_user, current_user, login_required
 from sqlalchemy import desc, cast, text, or_
 from validation.validator import Validator
 
@@ -18,6 +19,7 @@ user_schema = UserSchema()
 
 # Create a Flight
 @app.route('/api/flights', methods=['POST'])
+@login_required
 def add_flight():
     for a in Flight.query:
         if request.json["id"] == a.id:
@@ -25,7 +27,9 @@ def add_flight():
 
     data = []
     for a in Flight.get_attributes():
-        data.append(request.json[a])
+        if a != "user_id":
+            data.append(request.json[a])
+    data.append(current_user.id)
 
     new_flight = Flight(*data)
 
@@ -42,6 +46,7 @@ def add_flight():
 
 # Get All Flights
 @app.route('/api/flights', methods=['GET'])
+@login_required
 def get_flights():
     sort_by = request.args.get("sort_by", type=str)
     sort_type = request.args.get("sort_type", type=str)
@@ -49,7 +54,7 @@ def get_flights():
     offset = request.args.get("offset", type=int)
     limit = request.args.get("limit", type=int)
 
-    all_flights = Flight.query
+    all_flights = Flight.query.filter_by(user_id=current_user.id)
 
     for i in Flight.get_attributes():
         if i == sort_by:
@@ -75,8 +80,9 @@ def get_flights():
 
 # Get Single Flight
 @app.route('/api/flights/<id_>', methods=['GET'])
+@login_required
 def get_flight(id_):
-    flight = Flight.query.get(id_)
+    flight = Flight.query.filter_by(user_id=current_user.id, id=id_).first()
 
     check = Validator.check_id(id_, flight)
     if check is not None:
@@ -88,6 +94,7 @@ def get_flight(id_):
 
 # Update a Flight
 @app.route('/api/flights/<id_>', methods=['PUT'])
+@login_required
 def update_flight(id_):
     update_f = Flight.query.get(id_)
 
@@ -110,6 +117,7 @@ def update_flight(id_):
 
 # Delete Flight
 @app.route('/api/flights/<id_>', methods=['DELETE'])
+@login_required
 def delete_flight(id_):
     flight = Flight.query.get(id_)
 
@@ -146,14 +154,14 @@ def register_user():
 
 
 @app.route('/api/login', methods=['POST'])
-def login_user():
+def login_u():
     for user in User.query:
         if user.get_mail() != request.json["email"]:
             continue
         else:
-            if user.get_pass() == request.json["password"]:
-                login(user.get_id())
-                return jsonify({'status': 201, 'message': 'User logged in successfully'}), 201
+            if user.get_pass() == encode(request.json["password"]):
+                login_user(user)
+                return jsonify({'status': 201, 'message': 'User logged in successfully'}), 200
     return jsonify({'status': 404, 'message': 'Either email or password is incorrect'}), 404
 
 
@@ -163,6 +171,7 @@ def login(u_id):
 
 
 @app.route('/api/logout', methods=['GET'])
+@login_required
 def logout():
     logout_user()
     return jsonify({'status': 200, 'message': "User log out successfully"}), 200
