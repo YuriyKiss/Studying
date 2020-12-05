@@ -4,45 +4,8 @@ import validation.enums
 
 
 class Validator:
-    @staticmethod
-    def check_id(id_, data):
-        if id_ <= str(0):
-            return {"status": 404, "message": "Flight not found"}, {"info": "ID cannot be <= 0"}
-        if data is None:
-            return {"status": 404, "message": "Flight not found"}, {"info": "Such ID doesn't exist"}
-        else:
-            return None
-
-    @staticmethod
-    def check_name(func):
-        def func_wrapper(self, string):
-            if not all(x.isalpha() or x.isspace() for x in string):
-                print("First and last name should only contain alphabetic symbols")
-            func(self, string)
-
-        return func_wrapper
-
-    @staticmethod
-    def check_email(func):
-        def func_wrapper(self, string):
-            if re.match('[a-zA-Z0-9._]{3,16}[@]\w{3,6}[.]\w{2,3}([.]((ua)|(uk)))?', string):
-                func(self, string)
-            else:
-                func(self, None)
-
-        return func_wrapper
-
-    @staticmethod
-    def check_pass(func):
-        def func_wrapper(self, string):
-            if re.match("\S{6,16}", string):
-                func(self, string)
-            else:
-                func(self, None)
-
-        return func_wrapper
-
-    @staticmethod
+    # ----------------------------------------- Flight class validations ------------------------------------------ #
+    @staticmethod              # ID and Price validation
     def check_positive(func):
         def func_wrapper(self, num):
             if int(num) <= 0:
@@ -53,18 +16,18 @@ class Validator:
 
         return func_wrapper
 
-    @staticmethod
-    def check_float(func):
-        def func_wrapper(self, num):
-            try:
-                num = round(float(num), 2)
-            except ValueError:
-                print('This number should be float type')
-            func(self, num)
+    @staticmethod              # Departure/Arrival Country validation
+    def check_country(func):
+        def func_wrapper(self, info):
+            if str(info).lower() not in validation.enums.Countries.__members__:
+                print("That country " + info + " is not listed in Enum")
+                func(self, None)
+            else:
+                func(self, info)
 
         return func_wrapper
 
-    @staticmethod
+    @staticmethod               # Departure/Arrival Time validation
     def check_time(func):
         def func_wrapper(self, date):
             try:
@@ -78,18 +41,18 @@ class Validator:
 
         return func_wrapper
 
-    @staticmethod
-    def check_country(func):
-        def func_wrapper(self, info):
-            if str(info).lower() not in validation.enums.Countries.__members__:
-                print("That country " + info + " is not listed in Enum")
-                func(self, None)
-            else:
-                func(self, info)
+    @staticmethod              # Ticket Price validation
+    def check_float(func):
+        def func_wrapper(self, num):
+            try:
+                num = round(float(num), 2)
+            except ValueError:
+                print('This number should be float type')
+            func(self, num)
 
         return func_wrapper
 
-    @staticmethod
+    @staticmethod              # Company Name validation
     def check_company(func):
         def func_wrapper(self, info):
             if str(info).lower() not in validation.enums.Companies.__members__:
@@ -100,7 +63,7 @@ class Validator:
 
         return func_wrapper
 
-    @staticmethod
+    @staticmethod              # Comparing Arrival and Departure time
     def compare_dates(func):
         def func_wrapper(self, d1, d2):
             if d1 is None or d2 is None:
@@ -115,3 +78,43 @@ class Validator:
                 func(self, d1, d2)
 
         return func_wrapper
+
+    # ----------------------------------------- User class validations ------------------------------------------ #
+    @staticmethod              # User Name validation
+    def check_name(func):
+        def func_wrapper(self, string):
+            if not all(x.isalpha() or x.isspace() for x in string):
+                print("First and last name should only contain alphabetic symbols")
+            func(self, string)
+
+        return func_wrapper
+
+    @staticmethod              # User Email validation
+    def check_email(func):
+        def func_wrapper(self, string):
+            if re.match('[a-zA-Z0-9._]{3,16}[@]\w{3,6}[.]\w{2,3}([.]((ua)|(uk)))?', string):
+                func(self, string)
+            else:
+                func(self, None)
+
+        return func_wrapper
+
+    @staticmethod             # User Password validation
+    def check_pass(func):
+        def func_wrapper(self, string):
+            if re.match("\S{6,16}", str(string)):
+                func(self, str(string).lower())
+            else:
+                func(self, None)
+
+        return func_wrapper
+
+    # ----------------------------------------- App Routes validations ------------------------------------------ #
+    @staticmethod
+    def check_id(id_, data):
+        if id_ <= str(0):
+            return {"status": 404, "message": "Flight not found"}, {"info": "ID cannot be <= 0"}
+        if data is None:
+            return {"status": 404, "message": "Flight not found"}, {"info": "Such ID doesn't exist"}
+        else:
+            return None

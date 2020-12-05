@@ -3,7 +3,7 @@
 from app import app, db, login_m
 from flight import Flight, FlightSchema
 from user import User, UserSchema
-from nothing_to_look_at import encode
+from nothing_to_look_at import validate
 
 from flask import request, jsonify
 from flask_login import login_user, logout_user, current_user, login_required
@@ -159,7 +159,7 @@ def login_u():
         if user.get_mail() != request.json["email"]:
             continue
         else:
-            if user.get_pass() == encode(request.json["password"]):
+            if validate(user.get_pass(), request.json["password"]):
                 login_user(user)
                 return jsonify({'status': 201, 'message': 'User logged in successfully'}), 200
     return jsonify({'status': 404, 'message': 'Either email or password is incorrect'}), 404

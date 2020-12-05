@@ -1,6 +1,8 @@
+# Importing database to create class model and Marshmallow to create Flight Schema
 from app import db, ma
-import datetime
+
 from validation.validator import Validator
+import datetime
 
 
 class MyDateTime(db.TypeDecorator):
@@ -54,14 +56,6 @@ class Flight(db.Model):
                 attributes.append(attr)
         return attributes
 
-    @Validator.compare_dates
-    def _compare_dates(self, d1, d2):
-        if d1 is None or d2 is None:
-            self.departure_time = None
-            self.arrival_time = None
-
-        return self
-
     @Validator.check_positive
     def set_id(self, id_num):
         self.id = id_num
@@ -90,6 +84,14 @@ class Flight(db.Model):
     @Validator.check_company
     def set_company(self, info):
         self.company = info
+
+    @Validator.compare_dates
+    def _compare_dates(self, d1, d2):
+        if d1 is None or d2 is None:
+            self.departure_time = None
+            self.arrival_time = None
+
+        return self
 
 
 # Product Schema
