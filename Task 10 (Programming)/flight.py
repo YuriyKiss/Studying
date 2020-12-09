@@ -46,6 +46,9 @@ class Flight(db.Model):
                 attributes.append(attr)
         return attributes
 
+    def get_places(self):
+        return self.places
+
     @Validator.check_positive
     def set_id(self, id_num):
         self.id = id_num
@@ -78,6 +81,9 @@ class Flight(db.Model):
     @Validator.check_positive
     def set_places(self, num):
         self.places = num
+
+    def set_places_amount(self, x):
+        self.places -= x
 
     @Validator.compare_dates
     def _compare_dates(self, d1, d2):

@@ -33,8 +33,12 @@ class Validator:
             try:
                 if isinstance(date, int):
                     raise ValueError
-                datetime.datetime.strptime(date, '%Y-%m-%d %H:%M')
-                func(self, date)
+                info = datetime.datetime.strptime(date, '%Y-%m-%d %H:%M')
+                if info < datetime.datetime.strptime('2021-01-01 00:00', '%Y-%m-%d %H:%M'):
+                    print("Year is before 2021")
+                    func(self, None)
+                else:
+                    func(self, date)
             except ValueError:
                 print("Incorrect data format. Correct is YYYY-MM-DD HH:MM")
                 func(self, None)

@@ -12,7 +12,7 @@ app = Flask(__name__)
 app.secret_key = app_key
 
 # Creating link inside application to database (in this case - PostgreSQL)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql+psycopg2://postgres:1234@localhost:5432/second'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql+psycopg2://postgres:1234@localhost:5432/third'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 # Initializing database, then Marshmallow
