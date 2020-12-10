@@ -45,7 +45,7 @@ def get_orders():
     else:
         orders = Order.query
 
-    if orders is not None:
+    if orders.first() is not None:
         return jsonify({"status": 200, "message": "Successfully got your orders"}, {"info": orders_schema.dump(orders)})
 
     return jsonify({"status": 404, "message": "You haven't done any orders yet"})
@@ -59,7 +59,7 @@ def get_order(id_):
     else:
         orders = Order.query.filter_by(id=id_)
 
-    if orders is not None:
+    if orders.first() is not None:
         f_id = orders.first().get_flight_id()
         flight = Flight.query.filter_by(id=f_id).first()
 

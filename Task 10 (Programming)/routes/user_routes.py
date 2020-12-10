@@ -39,8 +39,7 @@ def login_u():
         if validate(user.get_pass(), request.json["password"]):
             login_user(user)
             return jsonify({'status': 201, 'message': 'User logged in successfully'})
-    else:
-        return jsonify({'status': 404, 'message': 'Either email or password is incorrect'})
+    return jsonify({'status': 404, 'message': 'Either email or password is incorrect'})
 
 
 @login_m.user_loader
