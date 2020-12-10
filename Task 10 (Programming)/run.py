@@ -1,5 +1,8 @@
 from application import app
-from routes.app_routes import *
+
+from routes.order_routes import *
+from routes.user_routes import *
+from routes.flight_routes import *
 
 # Run Server
 if __name__ == '__main__':
