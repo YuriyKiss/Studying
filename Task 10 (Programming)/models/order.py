@@ -38,8 +38,8 @@ class Order(db.Model):
         return attributes
 
     @Validator.check_positive
-    def set_id(self, id):
-        self.id = id
+    def set_id(self, _id):
+        self.id = _id
 
     @Validator.check_positive
     def set_user_id(self, user_id):

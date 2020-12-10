@@ -46,9 +46,6 @@ def get_orders():
         orders = Order.query
 
     if orders is not None:
-        f_id = orders.first().get_flight_id()
-        flight = Flight.query.filter_by(id=f_id)
-
         return jsonify({"status": 200, "message": "Successfully got your orders"}, {"info": orders_schema.dump(orders)})
 
     return jsonify({"status": 404, "message": "You haven't done any orders yet"})
