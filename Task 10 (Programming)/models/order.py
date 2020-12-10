@@ -1,7 +1,7 @@
 import datetime
 
-from app import db, ma
-from custom_time import MyDateTime
+from application import db, ma
+from validation.custom_time import MyDateTime
 from validation.validator import Validator
 
 

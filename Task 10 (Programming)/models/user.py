@@ -1,5 +1,5 @@
-from app import db, ma
-from nothing_to_look_at import encode
+from application import db, ma
+from validation.codes import encode
 from validation.validator import Validator
 from flask_login import UserMixin
 

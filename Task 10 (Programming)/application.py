@@ -1,18 +1,19 @@
-# Importing Flask, Flask-Login , SQLAlchemy and Marshmallow to work with
+# Importing Flask, Flask-Login, SQLAlchemy and Marshmallow to work with
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from flask_marshmallow import Marshmallow
 from flask_login import LoginManager
 
-# Importing app key
-from nothing_to_look_at import app_key
+# Importing app key and config
+from validation.codes import app_key
+from config import *
 
 # Initializing Application Framework
 app = Flask(__name__)
 app.secret_key = app_key
 
 # Creating link inside application to database (in this case - PostgreSQL)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql+psycopg2://postgres:1234@localhost:5432/third'
+app.config['SQLALCHEMY_DATABASE_URI'] = f'postgresql+psycopg2://{USER}:{PASSWORD}@{LINK}:{PORT}/{DATABASE}'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 # Initializing database, then Marshmallow

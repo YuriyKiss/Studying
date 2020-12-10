@@ -1,11 +1,11 @@
 # Import application, database, Flight model and scheme, validator file and functions from flask and sqlalchemy
 # to operate with queries
-from app import app, db, login_m
-from nothing_to_look_at import validate
+from application import app, db, login_m
+from validation.codes import validate
 
-from flight import Flight, FlightSchema
-from user import User, UserSchema
-from order import Order, OrderSchema
+from models.flight import Flight, FlightSchema
+from models.user import User, UserSchema
+from models.order import Order, OrderSchema
 
 from flask import request, jsonify
 from flask_login import login_user, logout_user, current_user, login_required
@@ -243,8 +243,3 @@ def get_order(id_):
                        {"order": flight_schema.dump(flight)})
 
     return jsonify({"status": 404, "message": "This order id does not exist"})
-
-
-# Run Server
-if __name__ == '__main__':
-    app.run(debug=True)

@@ -1,7 +1,7 @@
 # Importing database to create class model and Marshmallow to create Flight Schema
-from app import db, ma
+from application import db, ma
 from validation.validator import Validator
-from custom_time import MyDateTime
+from validation.custom_time import MyDateTime
 
 
 # Flight Class/Model

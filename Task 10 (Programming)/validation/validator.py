@@ -4,7 +4,7 @@ import validation.enums
 
 
 class Validator:
-    # ----------------------------------------- Flight class validations ------------------------------------------ #
+    # -------------------------------------------- General validations -------------------------------------------- #
     @staticmethod              # ID, Price, and Places validation
     def check_positive(func):
         def func_wrapper(self, num):
@@ -16,6 +16,7 @@ class Validator:
 
         return func_wrapper
 
+    # ----------------------------------------- Flight class validations ------------------------------------------ #
     @staticmethod              # Departure/Arrival Country validation
     def check_country(func):
         def func_wrapper(self, info):
