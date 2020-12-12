@@ -59,8 +59,8 @@ def get_flights():
         all_flights = all_flights.order_by(text(sort_by))
 
     if search:  # На цей запис я витратив набагато більше часу, ніж того хотів би
-        all_flights = all_flights.filter(or_(*[cast(getattr(Flight, x), db.String).like(f"%{search}%") \
-                                               for x in Flight.get_attributes()]))
+        all_flights = all_flights.filter(or_(*[cast(getattr(Flight, x), db.String).
+                                             like(f"%{search}%".lower()) for x in Flight.get_attributes()]))
 
     paginate_flights = all_flights.paginate(offset, limit)
 

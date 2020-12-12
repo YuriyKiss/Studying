@@ -4,8 +4,8 @@ import validation.enums
 
 class Validator:
     @staticmethod
-    def check_id(id, data):
-        if id <= str(0):
+    def check_id(id_, data):
+        if id_ <= str(0):
             return {"status": 404, "message": "Flight not found"}, {"info": "ID cannot be <= 0"}
         if data is None:
             return {"status": 404, "message": "Flight not found"}, {"info": "Such ID doesn't exist"}
