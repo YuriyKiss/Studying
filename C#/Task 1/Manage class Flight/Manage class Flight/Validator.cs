@@ -61,14 +61,14 @@ namespace Manage_class_Flight
             {
                 if (price <= 0)
                 {
-                    Console.WriteLine("You can't fly for free!\n");
+                    Console.WriteLine("You can't fly for free!");
                     return -1;
                 }
                 return (float)Math.Round(price * 100f) / 100f;
             }
             catch
             {
-                Console.WriteLine("Exception occured while validating price\n");
+                Console.WriteLine("Exception occured while validating price");
                 return -1;
             }
         }

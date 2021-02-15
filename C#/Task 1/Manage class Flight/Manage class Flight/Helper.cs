@@ -14,7 +14,7 @@ namespace Manage_class_Flight
          * PATH - for current project directory
          */
         private const string INFO = "\n[---------------------------------------------]\n";
-        private static string projectPath = Directory.GetParent(Directory.GetCurrentDirectory()).Parent.Parent.FullName;
+        private static string PATH = Directory.GetParent(Directory.GetCurrentDirectory()).Parent.Parent.FullName;
 
         public static void MenuText()
         {
@@ -72,7 +72,7 @@ namespace Manage_class_Flight
                 {
                     Console.WriteLine("Enter file name: ");
                     string path = Console.ReadLine();
-                    string jsonString = File.ReadAllText(projectPath + "\\" + path);
+                    string jsonString = File.ReadAllText(PATH + "\\" + path);
 
                     Console.Clear();
                     Console.WriteLine($"Current file: \"{path}\"\n");
@@ -94,6 +94,13 @@ namespace Manage_class_Flight
                     {
                         Console.WriteLine(e);
                     }
+
+                    if (dat == null)
+                    {
+                        Console.WriteLine($"{INFO}Collection is a null. Empty file?{INFO}");
+                        continue;
+                    }
+
                     return dat;
                 }
                 catch (FileNotFoundException)
@@ -108,10 +115,30 @@ namespace Manage_class_Flight
                 {
                     Console.WriteLine($"{INFO}Directory not found (null string){INFO}");
                 }
-                catch (Exception)
+                catch
                 {
                     Console.WriteLine($"{INFO}Incorrect input{INFO}");
                 }
+            }
+        }
+
+        public static void WriteToFile(Collection info)
+        {
+            try
+            {
+                Console.WriteLine("File to write data to:");
+                string path = Console.ReadLine();
+
+                File.WriteAllText(PATH + "\\" + path, JsonConvert.SerializeObject(info, Formatting.Indented));
+                Console.WriteLine($"Successfully saved information to {path}\n");
+            }
+            catch (FileNotFoundException)
+            {
+                Console.WriteLine($"{INFO}Such file does not exist{INFO}");
+            }
+            catch
+            {
+                Console.WriteLine($"{INFO}Unknown exception while writing file occured{INFO}");
             }
         }
     }
