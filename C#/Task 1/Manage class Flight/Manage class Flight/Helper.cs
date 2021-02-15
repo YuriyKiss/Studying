@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Reflection;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using System.Collections.Generic;
@@ -139,6 +140,47 @@ namespace Manage_class_Flight
             catch
             {
                 Console.WriteLine($"{INFO}Unknown exception while writing file occured{INFO}");
+            }
+        }
+
+        public static void EditFlight(Collection obj)
+        {
+            Console.WriteLine(obj);
+            Console.WriteLine("Choose flight ID to edit: ");
+
+            Flight to_edit = new Flight();
+            try
+            { 
+                int id = Int32.Parse(Console.ReadLine());
+                foreach (Flight f in obj.Coll)
+                {
+                    if (f.ID == id) to_edit = f;
+                }
+            }
+            catch
+            { Console.WriteLine("Error occured while parsing ID"); }
+                
+            if (to_edit == null)
+            {
+                Console.WriteLine("Flight with such ID does not exist");
+                return;
+            }
+
+            PropertyInfo[] flight_properties = Type.GetType("Manage_class_Flight.Flight").GetProperties();
+            try
+            {
+                for (int i = 1; i < flight_properties.Length; i++)
+                {
+                    Console.WriteLine($"Please enter value of {flight_properties[i].ToString()}:");
+                    if (i == 5) flight_properties[i].SetValue(to_edit, Single.Parse(Console.ReadLine()));
+                    else if (i == 3 || i == 4) flight_properties[i].SetValue(to_edit, DateTime.Parse(Console.ReadLine()));
+                    else flight_properties[i].SetValue(to_edit, Console.ReadLine());
+                }
+                obj.Edit(to_edit);
+            }
+            catch
+            {
+                Console.WriteLine("\nException occured while parsing previous statement\nStart editing object from scratch\n");
             }
         }
     }

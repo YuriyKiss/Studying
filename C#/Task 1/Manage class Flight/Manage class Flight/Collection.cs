@@ -129,5 +129,13 @@ namespace Manage_class_Flight
             }
             catch { Console.WriteLine("\nException occured while parsing previous statement\nStart creating object from scratch\n"); }  
         }
+
+        public void Edit(Flight right)
+        {
+            for (int i = 0; i < Coll.Count(); i++)
+            {
+                if (Coll[i].ID == right.ID) Coll[i] = right;
+            }
+        }
     }
 }

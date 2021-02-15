@@ -41,8 +41,8 @@ namespace Manage_class_Flight
                         break;
                     case 5:
                         Console.Clear();
-                        Console.WriteLine(obj);
-                        Console.WriteLine("Choose flight ID to edit: ");
+                        Helper.EditFlight(obj);
+                        obj.VerifyData();
                         break;
                     case 6:
                         Console.Clear();
