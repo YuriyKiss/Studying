@@ -59,5 +59,12 @@ namespace Manage_class_Flight
                 && DepartureTime != new DateTime(1900, 1, 1, 0, 0, 0) && ArrivalTime != new DateTime(1900, 1, 1, 0, 0, 0)
                 && TicketPrice != -1 && CompanyName != "invalid");
         }
+
+        public Flight DeepCopy()
+        {
+            Flight deepcopyFlight = new Flight(ID, DepartureCountry, ArrivalCountry, DepartureTime, ArrivalTime, TicketPrice, CompanyName);
+
+            return deepcopyFlight;
+        }
     }
 }

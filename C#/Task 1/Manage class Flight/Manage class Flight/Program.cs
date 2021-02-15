@@ -31,27 +31,19 @@ namespace Manage_class_Flight
                         Console.WriteLine(obj.Search(Console.ReadLine()));
                         break;
                     case 3:
-                        Console.Clear();
-                        obj.Sort();
+                        Helper.SortFlight(obj);
                         break;
                     case 4:
-                        Console.Clear();
-                        obj.Add();
+                        Helper.AddFlight(obj);
                         obj.VerifyData();
                         break;
                     case 5:
-                        Console.Clear();
                         Helper.EditFlight(obj);
-                        obj.VerifyData();
                         break;
                     case 6:
-                        Console.Clear();
-                        Console.WriteLine(obj);
-                        Console.WriteLine("Choose flight ID to delete: ");
-                        obj.Delete(Console.ReadLine());
+                        Helper.DeleteFlight(obj);
                         break;
                     case 7:
-                        Console.Clear();
                         Helper.WriteToFile(obj);
                         break;
                 }
