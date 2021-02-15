@@ -5,8 +5,9 @@ namespace Manage_class_Flight
     class Program
     {
         static void Main()
-        {   
+        {
             Collection obj = Helper.GetCollectionFromJson();
+            obj.VerifyData();
 
             bool flag = true;
             while (flag)

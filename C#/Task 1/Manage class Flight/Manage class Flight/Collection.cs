@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Collections.Generic;
 
 namespace Manage_class_Flight
 {
@@ -29,6 +27,23 @@ namespace Manage_class_Flight
                 resp += a.ToString() + "\n";
             }
             return resp;
+        }
+
+        // Integrity check
+        public void VerifyData()
+        {
+            List<Flight> delete_later = new List<Flight>();
+            foreach(Flight f in Coll)
+            {
+                if (!f.Verify())
+                {
+                    delete_later.Add(f);
+                }
+            }
+            foreach(Flight f in delete_later)
+            {
+                Coll.Remove(f);
+            }
         }
     }
 }

@@ -1,13 +1,20 @@
 ﻿using System;
 using System.IO;
-using System.Text.Json;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
+using System.Collections.Generic;
 
 namespace Manage_class_Flight
 {
     class Helper
     {
+        /* 
+         * Const/static values
+         * INFO - for exceptions messaging
+         * PATH - for current project directory
+         */
         private const string INFO = "\n[---------------------------------------------]\n";
-        private const string PATH = @"E:\Programs\GitHub Repos\Studying\C#\Task 1\Manage class Flight\Manage class Flight\";
+        private static string projectPath = Directory.GetParent(Directory.GetCurrentDirectory()).Parent.Parent.FullName;
 
         public static void MenuText()
         {
@@ -27,16 +34,14 @@ namespace Manage_class_Flight
             try
             {
                 int option = Int32.Parse(Console.ReadLine());
-                if(option < 0)
+                if(option < 0 || option > 7)
                 {
-                    Console.WriteLine($"{INFO}Menu option can't be lesser than 0{INFO}");
-                }
-                else if(option > 7)
-                {
-                    Console.WriteLine($"{INFO}Menu option can't be bigger than 7{INFO}");
+                    Console.Clear();
+                    Console.WriteLine($"{INFO}Menu option can't be (lesser than 0)/(bigger than 7){INFO}");
                 }
                 return option;
             }
+            // Yes, I decided to manage every exception separately. Easily changeable to >> catch (Exception) { //code }
             catch (FormatException)
             {
                 Console.WriteLine($"{INFO}Menu option is a number, not a char or string{INFO}");
@@ -67,12 +72,28 @@ namespace Manage_class_Flight
                 {
                     Console.WriteLine("Enter file name: ");
                     string path = Console.ReadLine();
-                    string jsonString = File.ReadAllText(PATH + path);
+                    string jsonString = File.ReadAllText(projectPath + "\\" + path);
 
                     Console.Clear();
                     Console.WriteLine($"Current file: \"{path}\"\n");
 
-                    Collection dat = JsonSerializer.Deserialize<Collection>(jsonString);
+                    List<string> errors = new List<string>();
+                    Collection dat = JsonConvert.DeserializeObject<Collection>
+                        (jsonString, new JsonSerializerSettings
+                            {
+                                Error = delegate (object sender, Newtonsoft.Json.Serialization.ErrorEventArgs args)
+                                    {
+                                        errors.Add(args.ErrorContext.Error.Message);
+                                        args.ErrorContext.Handled = true;
+                                    },
+                                Converters = { new IsoDateTimeConverter() }
+                            }
+                        );
+
+                    foreach(string e in errors)
+                    {
+                        Console.WriteLine(e);
+                    }
                     return dat;
                 }
                 catch (FileNotFoundException)

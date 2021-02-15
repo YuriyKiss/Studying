@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Manage_class_Flight
 {
@@ -44,6 +42,22 @@ namespace Manage_class_Flight
             return $"Flight ID - {ID}\nFlight path: {DepartureCountry} - {ArrivalCountry}\n" +
                 $"Flight time: {(ArrivalTime - DepartureTime).Hours} hrs {(ArrivalTime - DepartureTime).Minutes} min\n" +
                 $"Departure Time: {DepartureTime}\nTicket by {CompanyName} - {TicketPrice} UAH\n";
+        }
+
+        // Integrity check
+        public bool Verify()
+        {
+            ID = Validator.VerifyID(ID);
+            DepartureCountry = Validator.VerifyCountry(DepartureCountry);
+            ArrivalCountry = Validator.VerifyCountry(ArrivalCountry);
+            DepartureTime = Validator.VerifyTime(DepartureTime, ArrivalTime);
+            TicketPrice = Validator.VerifyPrice(TicketPrice);
+            CompanyName = Validator.VerifyCompany(CompanyName);
+
+
+            return (ID != -1 && DepartureCountry != "invalid" && ArrivalCountry != "invalid"
+                && DepartureTime != new DateTime(1900, 1, 1, 0, 0, 0) && ArrivalTime != new DateTime(1900, 1, 1, 0, 0, 0)
+                && TicketPrice != -1 && CompanyName != "invalid");
         }
     }
 }
