@@ -63,7 +63,7 @@ namespace Manage_class_Flight
                 {
                     if (flight_properties[i].GetValue(f).ToString().ToLower().Contains(request.ToLower()))
                     {
-                        response += $"Flight ID - {f.ID} contains \"{request}\" in {flight_properties[i]}\n";
+                        response += $"Flight with ID {f.ID} contains \"{request}\" in {flight_properties[i].Name}\n";
                     }
                 }
             }

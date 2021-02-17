@@ -55,16 +55,16 @@ namespace Manage_class_Flight
             return dep;
         }
 
-        public static float VerifyPrice(float price)
+        public static float VerifyPrice(float value)
         {
             try
             {
-                if (price <= 0)
+                if (value <= 0)
                 {
-                    Console.WriteLine("You can't fly for free!");
+                    Console.WriteLine($"You can't fly for free! Current price: {value}");
                     return -1;
                 }
-                return (float)Math.Round(price * 100f) / 100f;
+                return (float)Math.Round(value * 100f) / 100f;
             }
             catch
             {
@@ -92,12 +92,10 @@ namespace Manage_class_Flight
         }
     }
 
-
     public enum Countries
     {
         Ukraine = 1, Japan = 2, USA = 3, France = 4, Italy = 5, Germany = 6, England = 7, Switzerland = 8
     };
-
 
     public enum Companies
     {
