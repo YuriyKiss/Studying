@@ -71,16 +71,57 @@ namespace Manage_class_Flight
             return response;
         }
 
-        public void Sort(PropertyInfo[] flight_props, int option)
+        public void Sort(int option)
         {
+            PropertyInfo[] flight_props = Type.GetType("Manage_class_Flight.Flight").GetProperties();
+
             Coll = Coll.OrderBy(o => flight_props[option].GetValue(o, null)).ToList();
         }
 
-        public void Edit(Flight right)
+        public void Add(Flight new_fl)
         {
-            for (int i = 0; i < Coll.Count(); i++)
+            Coll.Add(new_fl);
+            EditFlightData(new_fl.ID);
+
+            VerifyData();
+        }
+
+        public bool Remove(int id)
+        {
+            for (int i = 0; i < Coll.Count; i++)
             {
-                if (Coll[i].ID == right.ID) Coll[i] = right;
+                if (Coll[i].ID == id)
+                {
+                    Flight removable = Coll[i];
+                    Coll.Remove(removable);
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        public void EditFlightData(int id)
+        {
+            PropertyInfo[] flp = Type.GetType("Manage_class_Flight.Flight").GetProperties();
+            Flight curr = Coll.Find(o => o.ID == id);
+
+            if (curr == null)
+            {
+                Console.WriteLine("Such ID does not exist");
+                return;
+            }
+
+            Flight save = curr.DeepCopy();
+
+            for (int i = 1; i < flp.Length; i++)
+            {
+                Console.Write($"Please enter value of {flp[i].Name}: ");
+                if (flp[i].PropertyType == Type.GetType("System.Single"))
+                    flp[i].SetValue(curr, Single.Parse(Console.ReadLine()));
+                else if (flp[i].PropertyType == Type.GetType("System.DateTime"))
+                    flp[i].SetValue(curr, DateTime.Parse(Console.ReadLine()));
+                else
+                    flp[i].SetValue(curr, Console.ReadLine());
             }
         }
     }

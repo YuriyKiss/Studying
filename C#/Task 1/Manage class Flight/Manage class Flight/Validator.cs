@@ -4,6 +4,7 @@ namespace Manage_class_Flight
 {
     class Validator
     {
+        // Class properties validation
         public static int VerifyID(int value)
         {
             try 
@@ -79,17 +80,18 @@ namespace Manage_class_Flight
             {
                 if (!Enum.IsDefined(typeof(Companies), value))
                 {
-                    Console.WriteLine("Company is not in Enum\n");
+                    Console.WriteLine("Company is not in Enum");
                     return "invalid";
                 }
                 return value;
             }
             catch (Exception)
             {
-                Console.WriteLine("Exception occured, while validating Companies\n");
+                Console.WriteLine("Exception occured, while validating Companies");
                 return "invalid";
             }
         }
+
     }
 
     public enum Countries

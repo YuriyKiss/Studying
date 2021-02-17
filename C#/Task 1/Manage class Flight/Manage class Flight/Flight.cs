@@ -16,7 +16,8 @@ namespace Manage_class_Flight
             CompanyName = "invalid";
         }
 
-        public Flight(int id, string dep_count, string arr_count, DateTime dep_time, DateTime arr_time, float tick, string comp)
+        public Flight(int id, string dep_count, string arr_count, DateTime dep_time, 
+                      DateTime arr_time, float tick, string comp)
         {
             ID = id;
             DepartureCountry = dep_count;
@@ -62,7 +63,8 @@ namespace Manage_class_Flight
 
         public Flight DeepCopy()
         {
-            Flight deepcopyFlight = new Flight(ID, DepartureCountry, ArrivalCountry, DepartureTime, ArrivalTime, TicketPrice, CompanyName);
+            Flight deepcopyFlight = new Flight(ID, DepartureCountry, ArrivalCountry, 
+                DepartureTime, ArrivalTime, TicketPrice, CompanyName);
 
             return deepcopyFlight;
         }
