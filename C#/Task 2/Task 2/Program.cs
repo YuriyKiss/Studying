@@ -1,8 +1,8 @@
-﻿using System;
-using System.IO;
-using Newtonsoft.Json;
-using System.Reflection;
+﻿using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
+using System;
+using System.IO;
+using System.Reflection;
 
 namespace Manage_class_Flight
 {
@@ -11,11 +11,11 @@ namespace Manage_class_Flight
         private const string INFO = "\n[---------------------------------------------]\n";
         private static readonly string PATH = Directory.GetParent(Directory.
             GetCurrentDirectory()).Parent.Parent.FullName;
-        private static Collection<Flight> obj_collection;
+        private static Collection<Product> obj_collection;
         
         static void Main()
         {
-            obj_collection = GetCollectionFromJson<Flight>();
+            obj_collection = GetCollectionFromJson<Product>();
 
             bool flag = true;
             while (flag)
@@ -32,11 +32,11 @@ namespace Manage_class_Flight
                         break;
                     case 2: Search();
                         break;
-                    case 3: Sort<Flight>();
+                    case 3: Sort<Product>();
                         break;
-                    case 4: Add<Flight>();
+                    case 4: Add<Product>();
                         break;
-                    case 5: Edit<Flight>();
+                    case 5: Edit<Product>();
                         break;
                     case 6: Delete();
                         break;
@@ -46,7 +46,7 @@ namespace Manage_class_Flight
             }
         }
 
-        public static Collection<Flight> GetCollectionFromJson<T>()
+        public static Collection<T> GetCollectionFromJson<T>()
         {
             while (true)
             {
@@ -59,7 +59,7 @@ namespace Manage_class_Flight
                     Console.Clear();
                     Console.WriteLine($"Current file: \"{path}\"\n");
 
-                    Collection<Flight> dat = JsonConvert.DeserializeObject<Collection<Flight>>
+                    Collection<T> dat = JsonConvert.DeserializeObject<Collection<T>>
                         (jsonString, new JsonSerializerSettings
                         {
                             Error = delegate (object sender, Newtonsoft.Json.Serialization.ErrorEventArgs args)
@@ -175,14 +175,11 @@ namespace Manage_class_Flight
             catch { Console.Write($"{INFO}Input is a single number, not a string, char or null\nChoose sorting option again{INFO}"); }
         }
 
-        public static void Add<T>() where T : Flight
+        public static void Add<T>()
         {
-            T new_obj = default(T);
-
-            obj_collection.Sort(0);
+            var new_obj = (T)Activator.CreateInstance(typeof(T));
 
             PropertyInfo[] props = Type.GetType(typeof(T).ToString()).GetProperties();
-            props[0].SetValue(new_obj, obj_collection.Coll[^1].ID + 1);
 
             Console.Clear();
             try
@@ -194,6 +191,8 @@ namespace Manage_class_Flight
                         props[i].SetValue(new_obj, Single.Parse(Console.ReadLine()));
                     else if (props[i].PropertyType == Type.GetType("System.DateTime"))
                         props[i].SetValue(new_obj, DateTime.Parse(Console.ReadLine()));
+                    else if (props[i].PropertyType == Type.GetType("System.Double"))
+                        props[i].SetValue(new_obj, Double.Parse(Console.ReadLine()));
                     else
                         props[i].SetValue(new_obj, Console.ReadLine());
                 }
@@ -202,7 +201,7 @@ namespace Manage_class_Flight
             }
             catch
             {
-                obj_collection.Remove(new_obj.ID);
+                obj_collection.Remove((Guid)props[0].GetValue(new_obj));
 
                 Console.WriteLine("\nException occured while parsing previous statement\n" +
                     "Start creating object from scratch\n");
@@ -218,7 +217,7 @@ namespace Manage_class_Flight
                 Console.WriteLine(obj_collection);
                 Console.Write("Choose object ID to edit its property: ");
 
-                int id = Int32.Parse(Console.ReadLine());
+                Guid id = Guid.Parse(Console.ReadLine());
                 if(obj_collection.Coll.Find(o => o.ID == id) == null) { throw new Exception(); }
 
                 PropertyInfo[] props = Type.GetType(typeof(T).ToString()).GetProperties();
@@ -235,10 +234,10 @@ namespace Manage_class_Flight
 
                 obj_collection.EditValue(id, prop, value);
             }
-            catch
+            catch (Exception e)
             {
                 Console.WriteLine("\nException occured while parsing previous statement\n" +
-                "Start editing object from scratch\n");
+                $"Start editing object from scratch\n{e}\n");
             }
         }
 
@@ -250,7 +249,7 @@ namespace Manage_class_Flight
 
             try
             {
-                int id = Int32.Parse(Console.ReadLine());
+                Guid id = Guid.Parse(Console.ReadLine());
                 if (obj_collection.Remove(id))
                 {
                     Console.WriteLine($"Object with ID {id} removed successfully\n");

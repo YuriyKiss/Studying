@@ -6,19 +6,18 @@ namespace Manage_class_Flight
     class Flight
     {
         // Properties
-        private int _id;
         private string _dep_c, _arr_c;
         private DateTime _dep_t, _arr_t;
         private float _tick;
         private string _com_n;
 
         // Contructors
-        public Flight() { }
+        public Flight() { ID = Guid.NewGuid(); }
 
-        public Flight(int id, string dep_c, string arr_c, DateTime dep_t, 
+        public Flight(string dep_c, string arr_c, DateTime dep_t, 
                       DateTime arr_t, float tick, string com_n)
         {
-            ID = id;
+            ID = Guid.NewGuid();
             DepartureCountry = dep_c;
             ArrivalCountry = arr_c;
             DepartureTime = dep_t;
@@ -28,11 +27,7 @@ namespace Manage_class_Flight
         }
 
         // Setters and Getters
-        public int ID 
-        {
-            set { _id = Validator.VerifyID(value); }
-            get { return _id; }
-        }
+        public Guid ID { get; }
         public string DepartureCountry 
         {
             set { _dep_c = Validator.VerifyCountry(value); }
