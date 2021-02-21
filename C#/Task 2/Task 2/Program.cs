@@ -9,13 +9,13 @@ namespace Manage_class_Flight
     class Program
     {
         private const string INFO = "\n[---------------------------------------------]\n";
-        private static string PATH = Directory.GetParent(Directory.
+        private static readonly string PATH = Directory.GetParent(Directory.
             GetCurrentDirectory()).Parent.Parent.FullName;
-        private static Collection obj;
+        private static Collection<Flight> obj_collection;
         
         static void Main()
         {
-            obj = GetCollectionFromJson();
+            obj_collection = GetCollectionFromJson<Flight>();
 
             bool flag = true;
             while (flag)
@@ -32,11 +32,11 @@ namespace Manage_class_Flight
                         break;
                     case 2: Search();
                         break;
-                    case 3: Sort();
+                    case 3: Sort<Flight>();
                         break;
-                    case 4: Add();
+                    case 4: Add<Flight>();
                         break;
-                    case 5: Edit();
+                    case 5: Edit<Flight>();
                         break;
                     case 6: Delete();
                         break;
@@ -46,7 +46,7 @@ namespace Manage_class_Flight
             }
         }
 
-        public static Collection GetCollectionFromJson()
+        public static Collection<Flight> GetCollectionFromJson<T>()
         {
             while (true)
             {
@@ -59,7 +59,7 @@ namespace Manage_class_Flight
                     Console.Clear();
                     Console.WriteLine($"Current file: \"{path}\"\n");
 
-                    Collection dat = JsonConvert.DeserializeObject<Collection>
+                    Collection<Flight> dat = JsonConvert.DeserializeObject<Collection<Flight>>
                         (jsonString, new JsonSerializerSettings
                         {
                             Error = delegate (object sender, Newtonsoft.Json.Serialization.ErrorEventArgs args)
@@ -90,7 +90,7 @@ namespace Manage_class_Flight
 
         public static void MenuText()
         {
-            Console.Write("1. Print current collection of Flights\n" +
+            Console.Write("1. Print current collection of Objects\n" +
                           "2. Search the collection for an element\n" +
                           "3. Sort the collection by attribute\n" +
                           "4. Add an element to a collection\n" +
@@ -139,7 +139,7 @@ namespace Manage_class_Flight
         public static void Print()
         {
             Console.Clear();
-            Console.Write(obj);
+            Console.Write(obj_collection);
         }
 
         public static void Search()
@@ -148,61 +148,61 @@ namespace Manage_class_Flight
             Console.Write("Enter search term: ");
 
             string search_request = Console.ReadLine();
-            string collection_respond = obj.Search(search_request);
+            string collection_respond = obj_collection.Search(search_request);
 
             Console.Write("\n" + collection_respond + "\n");
         }
 
-        public static void Sort()
+        public static void Sort<T>()
         {
             Console.Clear();
 
-            PropertyInfo[] flight_properties = Type.GetType(typeof(Flight).ToString()).GetProperties();
-            for (int i = 0; i < flight_properties.Length; i++)
+            PropertyInfo[] properties = Type.GetType(typeof(T).ToString()).GetProperties();
+            for (int i = 0; i < properties.Length; i++)
             {
-                Console.WriteLine($"{i}. {flight_properties[i].Name}");
+                Console.WriteLine($"{i}. {properties[i].Name}");
             }
 
             Console.Write("\nChoose an option to sort by: ");
             try
             {
                 int option = Int32.Parse(Console.ReadLine());
-                obj.Sort(option);
+                obj_collection.Sort(option);
 
                 Console.Clear();
-                Console.WriteLine($"Successfully sorted by \"{flight_properties[option].Name}\"\n");
+                Console.WriteLine($"Successfully sorted by \"{properties[option].Name}\"\n");
             }
             catch { Console.Write($"{INFO}Input is a single number, not a string, char or null\nChoose sorting option again{INFO}"); }
         }
 
-        public static void Add()
+        public static void Add<T>() where T : Flight
         {
-            Flight new_fl = new Flight();
+            T new_obj = default(T);
 
-            obj.Sort(0);
+            obj_collection.Sort(0);
 
-            PropertyInfo[] flp = Type.GetType(typeof(Flight).ToString()).GetProperties();
-            flp[0].SetValue(new_fl, obj.Coll[^1].ID + 1);
+            PropertyInfo[] props = Type.GetType(typeof(T).ToString()).GetProperties();
+            props[0].SetValue(new_obj, obj_collection.Coll[^1].ID + 1);
 
             Console.Clear();
             try
             {
-                for (int i = 1; i < flp.Length; i++)
+                for (int i = 1; i < props.Length; i++)
                 {
-                    Console.Write($"Please enter value of {flp[i].Name}: ");
-                    if (flp[i].PropertyType == Type.GetType("System.Single"))
-                        flp[i].SetValue(new_fl, Single.Parse(Console.ReadLine()));
-                    else if (flp[i].PropertyType == Type.GetType("System.DateTime"))
-                        flp[i].SetValue(new_fl, DateTime.Parse(Console.ReadLine()));
+                    Console.Write($"Please enter value of {props[i].Name}: ");
+                    if (props[i].PropertyType == Type.GetType("System.Single"))
+                        props[i].SetValue(new_obj, Single.Parse(Console.ReadLine()));
+                    else if (props[i].PropertyType == Type.GetType("System.DateTime"))
+                        props[i].SetValue(new_obj, DateTime.Parse(Console.ReadLine()));
                     else
-                        flp[i].SetValue(new_fl, Console.ReadLine());
+                        props[i].SetValue(new_obj, Console.ReadLine());
                 }
 
-                obj.Add(new_fl);
+                obj_collection.Add(new_obj);
             }
             catch
             {
-                obj.Remove(new_fl.ID);
+                obj_collection.Remove(new_obj.ID);
 
                 Console.WriteLine("\nException occured while parsing previous statement\n" +
                     "Start creating object from scratch\n");
@@ -210,30 +210,30 @@ namespace Manage_class_Flight
             }
         }
 
-        public static void Edit()
+        public static void Edit<T>()
         {
             try
             {
                 Console.Clear();
-                Console.WriteLine(obj);
-                Console.Write("Choose flight ID to edit its property: ");
+                Console.WriteLine(obj_collection);
+                Console.Write("Choose object ID to edit its property: ");
 
                 int id = Int32.Parse(Console.ReadLine());
-                if(obj.Coll.Find(o => o.ID == id) == null) { throw new Exception(); }
+                if(obj_collection.Coll.Find(o => o.ID == id) == null) { throw new Exception(); }
 
-                PropertyInfo[] flight_properties = Type.GetType(typeof(Flight).ToString()).GetProperties();
-                for (int i = 1; i < flight_properties.Length; i++)
+                PropertyInfo[] props = Type.GetType(typeof(T).ToString()).GetProperties();
+                for (int i = 1; i < props.Length; i++)
                 {
-                    Console.WriteLine($"{i}. {flight_properties[i].Name}");
+                    Console.WriteLine($"{i}. {props[i].Name}");
                 }
-                Console.Write("Choose flight property to edit: ");
+                Console.Write("Choose object's property to edit: ");
 
-                PropertyInfo prop = flight_properties[Int32.Parse(Console.ReadLine())];
+                PropertyInfo prop = props[Int32.Parse(Console.ReadLine())];
 
                 Console.Write($"Enter new property value ({prop.PropertyType}) : ");
                 string value = Console.ReadLine();
 
-                obj.EditValue(id, prop, value);
+                obj_collection.EditValue(id, prop, value);
             }
             catch
             {
@@ -245,15 +245,15 @@ namespace Manage_class_Flight
         public static void Delete()
         {
             Console.Clear();
-            Console.WriteLine(obj);
-            Console.Write("Choose flight ID to delete: ");
+            Console.WriteLine(obj_collection);
+            Console.Write("Choose object's ID to delete: ");
 
             try
             {
                 int id = Int32.Parse(Console.ReadLine());
-                if (obj.Remove(id))
+                if (obj_collection.Remove(id))
                 {
-                    Console.WriteLine($"Flight with ID {id} removed successfully\n");
+                    Console.WriteLine($"Object with ID {id} removed successfully\n");
                     return;
                 }
                 Console.WriteLine($"{INFO}Object with such ID does not exist{INFO}");
@@ -272,7 +272,7 @@ namespace Manage_class_Flight
                 Console.WriteLine("File to write data to:");
                 string path = Console.ReadLine();
 
-                File.WriteAllText(PATH + "\\" + path, JsonConvert.SerializeObject(obj, Formatting.Indented));
+                File.WriteAllText(PATH + "\\" + path, JsonConvert.SerializeObject(obj_collection, Formatting.Indented));
                 Console.WriteLine($"Successfully saved information to {path}\n");
             }
             catch (FileNotFoundException)

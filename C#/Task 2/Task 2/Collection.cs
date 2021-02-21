@@ -5,27 +5,27 @@ using System.Collections.Generic;
 
 namespace Manage_class_Flight
 {
-    class Collection
+    class Collection<T> where T : Flight
     {
         // Constructors
         public Collection()
         {
-            Coll = new List<Flight>();
+            Coll = new List<T>();
         }
 
-        public Collection(List<Flight> data)
+        public Collection(List<T> data)
         {
             Coll = data;
         }
 
         // Setters and Getters
-        public List<Flight> Coll { get; set; }
+        public List<T> Coll { get; set; }
 
         // Functions override
         public override string ToString()
         {
             string resp = "";
-            foreach (Flight a in Coll)
+            foreach (T a in Coll)
             {
                 resp += a.ToString() + "\n";
             }
@@ -37,15 +37,15 @@ namespace Manage_class_Flight
         {
             string response = "";
 
-            PropertyInfo[] flight_properties = Type.GetType(typeof(Flight).ToString()).GetProperties();
+            PropertyInfo[] properties = Type.GetType(typeof(T).ToString()).GetProperties();
 
-            foreach (Flight f in Coll)
+            foreach (T t in Coll)
             {
-                for (int i = 0; i < flight_properties.Length; i++)
+                for (int i = 0; i < properties.Length; i++)
                 {
-                    if (flight_properties[i].GetValue(f).ToString().ToLower().Contains(request.ToLower()))
+                    if (properties[i].GetValue(t).ToString().ToLower().Contains(request.ToLower()))
                     {
-                        response += $"Flight with ID {f.ID} contains \"{request}\" in {flight_properties[i].Name}\n";
+                        response += $"Object with ID {t.ID} contains \"{request}\" in {properties[i].Name}\n";
                     }
                 }
             }
@@ -55,20 +55,21 @@ namespace Manage_class_Flight
 
         public void Sort(int option)
         {
-            PropertyInfo[] flight_props = Type.GetType(typeof(Flight).ToString()).GetProperties();
+            PropertyInfo[] props = Type.GetType(typeof(T).ToString()).GetProperties();
 
-            Coll = Coll.OrderBy(o => flight_props[option].GetValue(o, null)).ToList();
+            Coll = Coll.OrderBy(o => props[option].GetValue(o, null)).ToList();
         }
 
-        public void Add(Flight new_fl)
+        public void Add(T new_obj)
         {
-            Coll.Add(new_fl);
+            Coll.Add(new_obj);
         }
 
         public void EditValue(int id, PropertyInfo prop, string value)
         {
-            Flight curr = Coll.Find(o => o.ID == id);
+            T curr = Coll.Find(o => o.ID == id);
 
+            // Definitely needs more Type parsers when in use with other's classes (Int32, Duoble, (?))
             if (prop.PropertyType == Type.GetType("System.Single"))
                 prop.SetValue(curr, Single.Parse(value));
             else if (prop.PropertyType == Type.GetType("System.DateTime"))
@@ -87,17 +88,16 @@ namespace Manage_class_Flight
         // Verification
         public void Verify()
         {
-            PropertyInfo[] flp = Type.GetType(typeof(Flight).ToString()).GetProperties();
+            PropertyInfo[] props = Type.GetType(typeof(T).ToString()).GetProperties();
 
             for (int i = 0; i < Coll.Count(); ++i)
             {
-                foreach (PropertyInfo pi in flp)
+                foreach (PropertyInfo pi in props)
                 {
                     var coll_obj = pi.GetValue(Coll[i]);
-                    var new_obj = pi.GetValue(new Flight());
-                    if (coll_obj.Equals(new_obj))
+                    if (coll_obj.Equals(0) || coll_obj.Equals(null) || coll_obj.Equals(new DateTime()))
                     {
-                        Remove((int)flp[0].GetValue(Coll[i]));
+                        Remove((int)props[0].GetValue(Coll[i]));
                         i = -1;
                         break;
                     }
