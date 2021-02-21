@@ -202,7 +202,7 @@ namespace Manage_class_Flight
             }
             catch
             {
-                obj_collection.Remove(new_obj.ID);
+                obj_collection.Remove((int)props[0].GetValue(new_obj));
 
                 Console.WriteLine("\nException occured while parsing previous statement\n" +
                     "Start creating object from scratch\n");

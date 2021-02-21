@@ -5,7 +5,7 @@ using System.Collections.Generic;
 
 namespace Manage_class_Flight
 {
-    class Collection<T> where T : Flight
+    class Collection<T>
     {
         // Constructors
         public Collection()
@@ -45,7 +45,7 @@ namespace Manage_class_Flight
                 {
                     if (properties[i].GetValue(t).ToString().ToLower().Contains(request.ToLower()))
                     {
-                        response += $"Object with ID {t.ID} contains \"{request}\" in {properties[i].Name}\n";
+                        response += $"Object with ID {properties[0].GetValue(t)} contains \"{request}\" in {properties[i].Name}\n";
                     }
                 }
             }
@@ -67,13 +67,15 @@ namespace Manage_class_Flight
 
         public void EditValue(int id, PropertyInfo prop, string value)
         {
-            T curr = Coll.Find(o => o.ID == id);
+            T curr = Coll.Find(o => (int)this.GetType().GetProperties()[0].GetValue(o) == id);
 
             // Definitely needs more Type parsers when in use with other's classes (Int32, Duoble, (?))
             if (prop.PropertyType == Type.GetType("System.Single"))
                 prop.SetValue(curr, Single.Parse(value));
             else if (prop.PropertyType == Type.GetType("System.DateTime"))
                 prop.SetValue(curr, DateTime.Parse(value));
+            else if (prop.PropertyType == Type.GetType("System.Double"))
+                prop.SetValue(curr, Double.Parse(value));
             else
                 prop.SetValue(curr, value);
         }
@@ -81,7 +83,7 @@ namespace Manage_class_Flight
         public bool Remove(int id)
         {
             for (int i = 0; i < Coll.Count; i++)
-                if (Coll[i].ID == id) return Coll.Remove(Coll[i]);
+                if ((int)this.GetType().GetProperties()[0].GetValue(Coll[i]) == id) return Coll.Remove(Coll[i]);
             return false;
         }
 
