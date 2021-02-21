@@ -18,7 +18,7 @@ namespace Manage_class_Flight
             Coll = data;
         }
 
-        // Properties
+        // Setters and Getters
         public List<Flight> Coll { get; set; }
 
         // Functions override
@@ -37,8 +37,7 @@ namespace Manage_class_Flight
         {
             string response = "";
 
-            PropertyInfo[] flight_properties;
-            flight_properties = Type.GetType("Manage_class_Flight.Flight").GetProperties();
+            PropertyInfo[] flight_properties = Type.GetType(typeof(Flight).ToString()).GetProperties();
 
             foreach (Flight f in Coll)
             {
@@ -56,7 +55,7 @@ namespace Manage_class_Flight
 
         public void Sort(int option)
         {
-            PropertyInfo[] flight_props = Type.GetType("Manage_class_Flight.Flight").GetProperties();
+            PropertyInfo[] flight_props = Type.GetType(typeof(Flight).ToString()).GetProperties();
 
             Coll = Coll.OrderBy(o => flight_props[option].GetValue(o, null)).ToList();
         }
@@ -64,45 +63,25 @@ namespace Manage_class_Flight
         public void Add(Flight new_fl)
         {
             Coll.Add(new_fl);
-            EditFlightData(new_fl.ID);
+        }
+
+        public void EditValue(int id, PropertyInfo prop, string value)
+        {
+            Flight curr = Coll.Find(o => o.ID == id);
+
+            if (prop.PropertyType == Type.GetType("System.Single"))
+                prop.SetValue(curr, Single.Parse(value));
+            else if (prop.PropertyType == Type.GetType("System.DateTime"))
+                prop.SetValue(curr, DateTime.Parse(value));
+            else
+                prop.SetValue(curr, value);
         }
 
         public bool Remove(int id)
         {
             for (int i = 0; i < Coll.Count; i++)
-            {
-                if (Coll[i].ID == id)
-                {
-                    Flight removable = Coll[i];
-                    Coll.Remove(removable);
-                    return true;
-                }
-            }
+                if (Coll[i].ID == id) return Coll.Remove(Coll[i]);
             return false;
-        }
-
-        public void EditFlightData(int id)
-        {
-            PropertyInfo[] flp = Type.GetType("Manage_class_Flight.Flight").GetProperties();
-            Flight curr = Coll.Find(o => o.ID == id);
-
-            if (curr == null)
-            {
-                Console.WriteLine("Such ID does not exist");
-                return;
-            }
-
-
-            for (int i = 1; i < flp.Length; i++)
-            {
-                Console.Write($"Please enter value of {flp[i].Name}: ");
-                if (flp[i].PropertyType == Type.GetType("System.Single"))
-                    flp[i].SetValue(curr, Single.Parse(Console.ReadLine()));
-                else if (flp[i].PropertyType == Type.GetType("System.DateTime"))
-                    flp[i].SetValue(curr, DateTime.Parse(Console.ReadLine()));
-                else
-                    flp[i].SetValue(curr, Console.ReadLine());
-            }
         }
 
         // Verification
