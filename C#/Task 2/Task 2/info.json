@@ -1,0 +1,40 @@
+{
+  "Coll": [
+    {
+      "ID": 1,
+      "DepartureCountry": "USA",
+      "ArrivalCountry": "Ukraine",
+      "DepartureTime": "2021-05-07T14:00:00",
+      "ArrivalTime": "2021-05-07T17:30:00",
+      "TicketPrice": 2470.93,
+      "CompanyName": "Wizzair"
+    },
+    {
+      "ID": 2,
+      "DepartureCountry": "France",
+      "ArrivalCountry": "Ukraine",
+      "DepartureTime": "2021-05-09T18:00:00",
+      "ArrivalTime": "2021-05-09T20:00:00",
+      "TicketPrice": 1500.0,
+      "CompanyName": "Ryanair"
+    },
+    {
+      "ID": 3,
+      "DepartureCountry": "Switzerland",
+      "ArrivalCountry": "Japan",
+      "DepartureTime": "2021-05-10T23:00:00",
+      "ArrivalTime": "2021-05-11T01:30:00",
+      "TicketPrice": 3450.64,
+      "CompanyName": "ANA"
+    },
+    {
+      "ID": 4,
+      "DepartureCountry": "Ukraine",
+      "ArrivalCountry": "Japan",
+      "DepartureTime": "2021-03-16T16:30:00",
+      "ArrivalTime": "2021-03-16T19:45:00",
+      "TicketPrice": 1920.0,
+      "CompanyName": "ANA"
+    }
+  ]
+}
