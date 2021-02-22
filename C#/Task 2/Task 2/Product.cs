@@ -8,7 +8,8 @@ namespace Manage_class_Flight
         private string _title, _description, _imageUrl;
         private double _price;
         private DateTime _createdAt, _updatedAt;
-        
+
+        public Product() { ID = Guid.NewGuid(); }
 
         public Product(string title, string description, string imageUrl,
             double price, DateTime createdAt, DateTime updatedAt)

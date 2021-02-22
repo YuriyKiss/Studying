@@ -6,16 +6,16 @@ using System.Reflection;
 
 namespace Manage_class_Flight
 {
-    class Program
+    class Program 
     {
         private const string INFO = "\n[---------------------------------------------]\n";
         private static readonly string PATH = Directory.GetParent(Directory.
             GetCurrentDirectory()).Parent.Parent.FullName;
-        private static Collection<Product> obj_collection;
+        private static Collection<Flight> obj_collection;
         
         static void Main()
         {
-            obj_collection = GetCollectionFromJson<Product>();
+            obj_collection = GetCollectionFromJson<Flight>();
 
             bool flag = true;
             while (flag)
@@ -32,11 +32,11 @@ namespace Manage_class_Flight
                         break;
                     case 2: Search();
                         break;
-                    case 3: Sort<Product>();
+                    case 3: Sort<Flight>();
                         break;
-                    case 4: Add<Product>();
+                    case 4: Add<Flight>();
                         break;
-                    case 5: Edit<Product>();
+                    case 5: Edit<Flight>();
                         break;
                     case 6: Delete();
                         break;
@@ -175,7 +175,7 @@ namespace Manage_class_Flight
             catch { Console.Write($"{INFO}Input is a single number, not a string, char or null\nChoose sorting option again{INFO}"); }
         }
 
-        public static void Add<T>()
+        public static void Add<T>() where T : Flight
         {
             var new_obj = (T)Activator.CreateInstance(typeof(T));
 
@@ -187,14 +187,9 @@ namespace Manage_class_Flight
                 for (int i = 1; i < props.Length; i++)
                 {
                     Console.Write($"Please enter value of {props[i].Name}: ");
-                    if (props[i].PropertyType == Type.GetType("System.Single"))
-                        props[i].SetValue(new_obj, Single.Parse(Console.ReadLine()));
-                    else if (props[i].PropertyType == Type.GetType("System.DateTime"))
-                        props[i].SetValue(new_obj, DateTime.Parse(Console.ReadLine()));
-                    else if (props[i].PropertyType == Type.GetType("System.Double"))
-                        props[i].SetValue(new_obj, Double.Parse(Console.ReadLine()));
-                    else
-                        props[i].SetValue(new_obj, Console.ReadLine());
+                    var converted_value = Convert.ChangeType(Console.ReadLine(), props[i].PropertyType);
+
+                    props[i].SetValue(new_obj, converted_value);
                 }
 
                 obj_collection.Add(new_obj);
@@ -234,10 +229,10 @@ namespace Manage_class_Flight
 
                 obj_collection.EditValue(id, prop, value);
             }
-            catch (Exception e)
+            catch
             {
                 Console.WriteLine("\nException occured while parsing previous statement\n" +
-                $"Start editing object from scratch\n{e}\n");
+                $"Start editing object from scratch\n");
             }
         }
 

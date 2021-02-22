@@ -69,15 +69,9 @@ namespace Manage_class_Flight
         {
             T curr = Coll.Find(o => (Guid)Type.GetType(typeof(T).ToString()).GetProperties()[0].GetValue(o) == id);
 
-            // Definitely needs more Type parsers when in use with other's classes (Int32, (?))
-            if (prop.PropertyType == Type.GetType("System.Single"))
-                prop.SetValue(curr, Single.Parse(value));
-            else if (prop.PropertyType == Type.GetType("System.DateTime"))
-                prop.SetValue(curr, DateTime.Parse(value));
-            else if (prop.PropertyType == Type.GetType("System.Double"))
-                prop.SetValue(curr, Double.Parse(value));
-            else
-                prop.SetValue(curr, value);
+            var converted_value = Convert.ChangeType(value, prop.PropertyType);
+
+            prop.SetValue(curr, converted_value);
         }
 
         public bool Remove(Guid id)
