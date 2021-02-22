@@ -63,28 +63,27 @@ namespace Manage_class_Flight
         public void Add(T new_obj)
         {
             Coll.Add(new_obj);
+            Verify();
         }
 
         public void EditValue(int id, PropertyInfo prop, string value)
         {
-            T curr = Coll.Find(o => (int)this.GetType().GetProperties()[0].GetValue(o) == id);
+            PropertyInfo pi = typeof(T).GetProperty("ID");
 
-            // Definitely needs more Type parsers when in use with other's classes (Int32, Duoble, (?))
-            if (prop.PropertyType == Type.GetType("System.Single"))
-                prop.SetValue(curr, Single.Parse(value));
-            else if (prop.PropertyType == Type.GetType("System.DateTime"))
-                prop.SetValue(curr, DateTime.Parse(value));
-            else if (prop.PropertyType == Type.GetType("System.Double"))
-                prop.SetValue(curr, Double.Parse(value));
-            else
-                prop.SetValue(curr, value);
+            T obj = Coll.Find(o => (int)pi.GetValue(o) == id);
+
+            var converted_value = Convert.ChangeType(value, prop.PropertyType);
+
+            prop.SetValue(obj, converted_value);
         }
 
-        public bool Remove(int id)
+        public bool Remove(string id)
         {
-            for (int i = 0; i < Coll.Count; i++)
-                if ((int)this.GetType().GetProperties()[0].GetValue(Coll[i]) == id) return Coll.Remove(Coll[i]);
-            return false;
+            PropertyInfo pi = typeof(T).GetProperty("ID");
+
+            T obj = Coll.Find(o => pi.GetValue(o).ToString() == id);
+
+            return Coll.Remove(obj);
         }
 
         // Verification
@@ -99,7 +98,8 @@ namespace Manage_class_Flight
                     var coll_obj = pi.GetValue(Coll[i]);
                     if (coll_obj.Equals(0) || coll_obj.Equals(null) || coll_obj.Equals(new DateTime()))
                     {
-                        Remove((int)props[0].GetValue(Coll[i]));
+                        T removable = Coll.Find(o => pi.GetValue(o).ToString() == pi.GetValue(Coll[i]).ToString());
+                        Coll.Remove(removable);
                         i = -1;
                         break;
                     }

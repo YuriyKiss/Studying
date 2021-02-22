@@ -175,9 +175,9 @@ namespace Manage_class_Flight
             catch { Console.Write($"{INFO}Input is a single number, not a string, char or null\nChoose sorting option again{INFO}"); }
         }
 
-        public static void Add<T>() where T : Flight
+        public static void Add<T>() where T : Flight, new()
         {
-            T new_obj = default(T);
+            T new_obj = new T();
 
             obj_collection.Sort(0);
 
@@ -190,19 +190,16 @@ namespace Manage_class_Flight
                 for (int i = 1; i < props.Length; i++)
                 {
                     Console.Write($"Please enter value of {props[i].Name}: ");
-                    if (props[i].PropertyType == Type.GetType("System.Single"))
-                        props[i].SetValue(new_obj, Single.Parse(Console.ReadLine()));
-                    else if (props[i].PropertyType == Type.GetType("System.DateTime"))
-                        props[i].SetValue(new_obj, DateTime.Parse(Console.ReadLine()));
-                    else
-                        props[i].SetValue(new_obj, Console.ReadLine());
+                    var converted_value = Convert.ChangeType(Console.ReadLine(), props[i].PropertyType);
+
+                    props[i].SetValue(new_obj, converted_value);
                 }
 
                 obj_collection.Add(new_obj);
             }
             catch
             {
-                obj_collection.Remove((int)props[0].GetValue(new_obj));
+                obj_collection.Remove(props[0].GetValue(new_obj).ToString());
 
                 Console.WriteLine("\nException occured while parsing previous statement\n" +
                     "Start creating object from scratch\n");
@@ -229,6 +226,7 @@ namespace Manage_class_Flight
                 Console.Write("Choose object's property to edit: ");
 
                 PropertyInfo prop = props[Int32.Parse(Console.ReadLine())];
+                if(prop.PropertyType == typeof(System.Int32)) { throw new Exception(); }
 
                 Console.Write($"Enter new property value ({prop.PropertyType}) : ");
                 string value = Console.ReadLine();
@@ -250,7 +248,7 @@ namespace Manage_class_Flight
 
             try
             {
-                int id = Int32.Parse(Console.ReadLine());
+                string id = Console.ReadLine();
                 if (obj_collection.Remove(id))
                 {
                     Console.WriteLine($"Object with ID {id} removed successfully\n");

@@ -45,7 +45,7 @@ namespace Manage_class_Flight
         }
         public DateTime DepartureTime 
         {
-            set { _dep_t = value; }
+            set { _dep_t = Validator.VerifyDepartureTime(value); }
             get { return _dep_t; } 
         }
         public DateTime ArrivalTime 
