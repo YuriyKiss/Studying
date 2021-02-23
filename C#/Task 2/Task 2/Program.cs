@@ -11,11 +11,11 @@ namespace Manage_class_Flight
         private const string INFO = "\n[---------------------------------------------]\n";
         private static readonly string PATH = Directory.GetParent(Directory.
             GetCurrentDirectory()).Parent.Parent.FullName;
-        private static Collection<Flight> obj_collection;
+        private static Collection<Product> obj_collection;
         
         static void Main()
         {
-            obj_collection = GetCollectionFromJson<Flight>();
+            obj_collection = GetCollectionFromJson<Product>();
 
             bool flag = true;
             while (flag)
@@ -32,11 +32,11 @@ namespace Manage_class_Flight
                         break;
                     case 2: Search();
                         break;
-                    case 3: Sort<Flight>();
+                    case 3: Sort<Product>();
                         break;
-                    case 4: Add<Flight>();
+                    case 4: Add<Product>();
                         break;
-                    case 5: Edit<Flight>();
+                    case 5: Edit<Product>();
                         break;
                     case 6: Delete();
                         break;
@@ -64,7 +64,7 @@ namespace Manage_class_Flight
                         {
                             Error = delegate (object sender, Newtonsoft.Json.Serialization.ErrorEventArgs args)
                             {
-                                Console.WriteLine(args.ErrorContext.Error.Message);
+                                Console.WriteLine(INFO + args.ErrorContext.Error.Message + INFO);
                                 
                                 args.ErrorContext.Handled = true;
                             },
@@ -175,7 +175,7 @@ namespace Manage_class_Flight
             catch { Console.Write($"{INFO}Input is a single number, not a string, char or null\nChoose sorting option again{INFO}"); }
         }
 
-        public static void Add<T>() where T : Flight
+        public static void Add<T>() where T : Product, new()
         {
             var new_obj = (T)Activator.CreateInstance(typeof(T));
 

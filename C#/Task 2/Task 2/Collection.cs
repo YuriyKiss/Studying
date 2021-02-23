@@ -63,23 +63,27 @@ namespace Manage_class_Flight
         public void Add(T new_obj)
         {
             Coll.Add(new_obj);
+            Verify();   
         }
 
         public void EditValue(Guid id, PropertyInfo prop, string value)
         {
-            T curr = Coll.Find(o => (Guid)Type.GetType(typeof(T).ToString()).GetProperties()[0].GetValue(o) == id);
+            PropertyInfo pi = typeof(T).GetProperty("ID");
+
+            T obj = Coll.Find(o => (Guid)pi.GetValue(o) == id);
 
             var converted_value = Convert.ChangeType(value, prop.PropertyType);
 
-            prop.SetValue(curr, converted_value);
+            prop.SetValue(obj, converted_value);
         }
 
         public bool Remove(Guid id)
         {
-            for (int i = 0; i < Coll.Count; i++)
-                if ((Guid)Type.GetType(typeof(T).ToString()).GetProperties()[0].GetValue(Coll[i]) == id) 
-                    return Coll.Remove(Coll[i]);
-            return false;
+            PropertyInfo pi = typeof(T).GetProperty("ID");
+
+            T obj = Coll.Find(o => (Guid)pi.GetValue(o) == id);
+
+            return Coll.Remove(obj);
         }
 
         // Verification
@@ -92,15 +96,17 @@ namespace Manage_class_Flight
                 foreach (PropertyInfo pi in props)
                 {
                     var coll_obj = pi.GetValue(Coll[i]);
-                    if (coll_obj.Equals(0) || coll_obj.Equals(null) || coll_obj.Equals(new DateTime()))
+                    if (coll_obj is null || coll_obj.Equals((Single)0) || coll_obj.Equals(new DateTime())
+                        || coll_obj.Equals((Double)0)) 
                     {
-                        Remove((Guid)props[0].GetValue(Coll[i]));
+                        PropertyInfo p = typeof(T).GetProperty("ID");
+
+                        Remove((Guid)p.GetValue(Coll[i]));
                         i = -1;
                         break;
                     }
                 }
             }
         }
-
     }
 }

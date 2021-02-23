@@ -25,9 +25,19 @@ namespace Manage_class_Flight
 
         public static DateTime VerifyTime(DateTime dep, DateTime arr)
         {
-            if (dep < arr && (dep > DateTime.Now || arr > DateTime.Now))
+            if (dep < arr && arr > DateTime.Now)
             {
                 return arr;
+            }
+            throw new Exception($"Incorrect DateTime Format. Either departure happened after arrival\n" +
+                $"or either departure or arrival happened earlier this exact moment");
+        }
+
+        public static DateTime VerifyDepartureTime(DateTime dep)
+        {
+            if (dep > DateTime.Now)
+            {
+                return dep;
             }
             throw new Exception($"Incorrect DateTime Format. Either departure happened after arrival\n" +
                 $"or either departure or arrival happened earlier this exact moment");
