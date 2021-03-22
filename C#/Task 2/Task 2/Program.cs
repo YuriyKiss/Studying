@@ -3,19 +3,64 @@ using Newtonsoft.Json.Converters;
 using System;
 using System.IO;
 using System.Reflection;
+using System.ComponentModel.DataAnnotations;
 
 namespace Manage_class_Flight
 {
+    /// <summary> Base Product class. </summary>
+    public abstract class BaseProduct
+    {
+        public Guid ID { get; }
+
+        /// <summary> Constructor for json serializer. </summary>
+        [JsonConstructor]
+        protected BaseProduct()
+        {
+            ID = Guid.NewGuid();
+        }
+
+        /// <summary>Returns a String which represents the object instance.</summary>
+        public override string ToString()
+        {
+            return JsonConvert.SerializeObject(this, Formatting.Indented);
+        }
+    }
+
+    /// <summary> Class for Address representation. </summary>
+    public class Address : BaseProduct
+    {
+        [RegularExpression(@"[a-zA-z,.\s]+", ErrorMessage = "{0} must contain only letters ")]
+        public string AddressLine { get; set; }
+
+        [StringLength(5, ErrorMessage = "{0} length must be {1}.", MinimumLength = 5)]
+        [RegularExpression(@"\d+", ErrorMessage = "{0} must contain only number")]
+        public string PostalCode { get; set; }
+
+        [RegularExpression(@"[a-zA-Z,.\s]+", ErrorMessage = "{0} must contain only letters")]
+        public string Country { get; set; }
+
+        [RegularExpression(@"[a-zA-Z,.\s]+", ErrorMessage = "{0} must contain only letters")]
+        public string City { get; set; }
+
+        [Phone]
+        [StringLength(13, ErrorMessage = "{0} length must be {1}.", MinimumLength = 13)]
+        public string FaxNumber { get; set; }
+
+        [Phone]
+        [StringLength(13, ErrorMessage = "{0} length must be {1}.", MinimumLength = 13)]
+        public string PhoneNumber { get; set; }
+    }
+
     class Program 
     {
         private const string INFO = "\n[---------------------------------------------]\n";
         private static readonly string PATH = Directory.GetParent(Directory.
             GetCurrentDirectory()).Parent.Parent.FullName;
-        private static Collection<Product> obj_collection;
+        private static Collection<Flight> obj_collection;
         
         static void Main()
         {
-            obj_collection = GetCollectionFromJson<Product>();
+            obj_collection = GetCollectionFromJson<Flight>();
 
             bool flag = true;
             while (flag)
@@ -32,11 +77,11 @@ namespace Manage_class_Flight
                         break;
                     case 2: Search();
                         break;
-                    case 3: Sort<Product>();
+                    case 3: Sort<Flight>();
                         break;
-                    case 4: Add<Product>();
+                    case 4: Add<Flight>();
                         break;
-                    case 5: Edit<Product>();
+                    case 5: Edit<Flight>();
                         break;
                     case 6: Delete();
                         break;
@@ -175,7 +220,7 @@ namespace Manage_class_Flight
             catch { Console.Write($"{INFO}Input is a single number, not a string, char or null\nChoose sorting option again{INFO}"); }
         }
 
-        public static void Add<T>() where T : Product, new()
+        public static void Add<T>() where T : Flight, new()
         {
             var new_obj = (T)Activator.CreateInstance(typeof(T));
 
@@ -184,7 +229,7 @@ namespace Manage_class_Flight
             Console.Clear();
             try
             {
-                for (int i = 1; i < props.Length; i++)
+                for (int i = 0; i < props.Length - 1; i++)
                 {
                     Console.Write($"Please enter value of {props[i].Name}: ");
                     var converted_value = Convert.ChangeType(Console.ReadLine(), props[i].PropertyType);
@@ -216,14 +261,14 @@ namespace Manage_class_Flight
                 if(obj_collection.Coll.Find(o => o.ID == id) == null) { throw new Exception(); }
 
                 PropertyInfo[] props = Type.GetType(typeof(T).ToString()).GetProperties();
-                for (int i = 1; i < props.Length; i++)
+                for (int i = 0; i < props.Length - 1; i++)
                 {
                     Console.WriteLine($"{i}. {props[i].Name}");
                 }
                 Console.Write("Choose object's property to edit: ");
 
                 PropertyInfo prop = props[Int32.Parse(Console.ReadLine())];
-
+                if (prop.PropertyType == typeof(System.Guid)) { throw new Exception(); }
                 Console.Write($"Enter new property value ({prop.PropertyType}) : ");
                 string value = Console.ReadLine();
 

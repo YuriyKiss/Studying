@@ -1,0 +1,40 @@
+{
+  "Coll": [
+    {
+      "AddressLine": "Coventry Court",
+      "PostalCode": "02243",
+      "Country": "LA",
+      "City": "Baton Rouge",
+      "FaxNumber": "+380979028261",
+      "PhoneNumber": "+380949088261",
+      "ID": "e82a3b70-4895-41aa-a698-cea3adf01f51"
+    },
+    {
+      "AddressLine": "Pearlman Avenue",
+      "PostalCode": "03421",
+      "Country": "MA",
+      "City": "Massachusetts",
+      "FaxNumber": "+380979088123",
+      "PhoneNumber": "+380979088000",
+      "ID": "64adbf19-436b-4acf-8908-98353d33e1f2"
+    },
+    {
+      "AddressLine": "Mount Street",
+      "PostalCode": "67890",
+      "Country": "OH",
+      "City": "Irondale",
+      "FaxNumber": "+380979028261",
+      "PhoneNumber": "+380994088261",
+      "ID": "baa8da41-a812-4be2-84d0-13ab1048c02f"
+    },
+    {
+      "AddressLine": "Murphy Court",
+      "PostalCode": "92501",
+      "Country": "CA",
+      "City": "Riverside",
+      "FaxNumber": "+380979088222",
+      "PhoneNumber": "+380999088234",
+      "ID": "790b9100-dacf-471c-b2b0-35a42bd912c9"
+    }
+  ]
+}

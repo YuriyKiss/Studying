@@ -29,7 +29,7 @@
       "ArrivalCountry": "Japan",
       "DepartureTime": "2021-03-16T16:30:00",
       "ArrivalTime": "2021-03-16T19:45:00",
-      "TicketPrice": -1,
+      "TicketPrice": 1215.155,
       "CompanyName": "ANA"
     }
   ]
