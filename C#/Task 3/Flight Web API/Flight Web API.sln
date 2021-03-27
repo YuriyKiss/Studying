@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.31105.61
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Flight Web API", "Flight Web API\Flight Web API.csproj", "{BBA6747F-EB88-4556-B424-5ED42EA5A6CF}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{BBA6747F-EB88-4556-B424-5ED42EA5A6CF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BBA6747F-EB88-4556-B424-5ED42EA5A6CF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BBA6747F-EB88-4556-B424-5ED42EA5A6CF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BBA6747F-EB88-4556-B424-5ED42EA5A6CF}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {CE24B102-5D75-443B-80C1-040F4801AF36}
+	EndGlobalSection
+EndGlobal
