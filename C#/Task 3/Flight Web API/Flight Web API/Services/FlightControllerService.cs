@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using System.Collections.Generic;
 using Flight_Web_API.Models;
 
@@ -19,7 +20,7 @@ namespace Flight_Web_API.Sevices
         }
         public Flight GetOne(int id)
         {
-            throw new NotImplementedException();
+            return context.Flights.Find(id);
         }
 
         public int Create(Flight toAdd)
@@ -32,13 +33,32 @@ namespace Flight_Web_API.Sevices
             catch { return 404; }
             return 201;
         }
-        public Flight Delete(int id)
+        public int Delete(int id)
         {
-            throw new NotImplementedException();
+            Flight to_remove = null;
+            foreach (Flight x in context.Flights)
+                if (x.ID == id)
+                    to_remove = x;
+            if (to_remove != null)
+            {
+                context.Flights.Remove(to_remove);
+                context.SaveChanges();
+                return 202;
+            }
+            return 404;
         }
         public int Edit(int id, Flight toEdit)
         {
-            throw new NotImplementedException();
+            var entity = context.Flights.FirstOrDefault(item => item.ID == id);
+
+            if (entity != null)
+            {
+                context.Flights.Remove(entity);
+                context.Flights.Add(toEdit);
+                context.SaveChanges();
+                return 202;
+            }
+            return 404;
         }
     }
 }

@@ -9,7 +9,7 @@ namespace Flight_Web_API.Sevices
         public Flight GetOne(int id);
 
         public int Create(Flight toAdd);
-        public Flight Delete(int id);
+        public int Delete(int id);
         public int Edit(int id, Flight toEdit);
     }
 }
