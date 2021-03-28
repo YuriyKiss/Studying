@@ -6,6 +6,7 @@ namespace Flight_Web_API.Models
     public partial class Flight
     {
         [Key]
+        [Range(0, Int32.MaxValue, ErrorMessage = "The field {0} must be greater than {1}.")]
         public int ID { get; set; }
 
         [Required]

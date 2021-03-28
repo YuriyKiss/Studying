@@ -39,10 +39,8 @@ namespace Flight_Web_API.Models
     {
         protected override ValidationResult IsValid(object value, ValidationContext validationContext)
         {
-            if ((decimal)value > 0) {
-                Math.Round((decimal)value, 2);
+            if ((decimal)value > 0)
                 return ValidationResult.Success;
-            }
             else
                 return new ValidationResult("Price can't be negative");
         }

@@ -16,6 +16,18 @@ namespace Flight_Web_API.Controllers
             service = ser;
         }
 
-        
+        [HttpPost]
+        public ActionResult Create(Flight toAdd)
+        {
+            if (ModelState.IsValid)
+            {
+                if(service.Create(toAdd) == 201)
+                {
+                    return Ok("Flight was created successfully");
+                }
+                return BadRequest("Flight ID already exist, or validation didn't pass");
+            }
+            return BadRequest("POST get incorrect data values");
+        }
     }
 }
