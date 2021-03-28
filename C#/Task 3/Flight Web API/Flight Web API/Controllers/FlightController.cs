@@ -17,11 +17,20 @@ namespace Flight_Web_API.Controllers
         }
 
         [HttpGet]
+        public ActionResult GetAll(string search, string sortBy, string sortOrder, int offset, int limit)
+        {
+            var (result, count) = service.GetAll(search, sortBy, sortOrder, offset, limit);
+            if (count > 0)
+                return Ok(new { result, count });
+            return BadRequest("No orders found");
+        }
+
+        [HttpGet]
         [Route("{id}")]
         public ActionResult GetOne(int id)
         {
             Flight get = service.GetOne(id);
-            if (!(get == null))
+            if (get != null)
                 return Ok(get);
             return NotFound("Flight with such ID was not found");
         }
@@ -33,7 +42,7 @@ namespace Flight_Web_API.Controllers
             {
                 if(service.Create(toAdd) == 201)
                     return Created($"api/flights/{toAdd.ID}", "Flight was created successfully");
-                return BadRequest("Flight ID already exist, or validation didn't pass");
+                return BadRequest("Flight ID already exist");
             }
             return BadRequest("POST get incorrect data values");
         }
@@ -56,7 +65,7 @@ namespace Flight_Web_API.Controllers
             {
                 if(service.Edit(id, toEdit) == 202)
                     return Accepted($"api/flights/{toEdit.ID}", "Flight was edited successfully");
-                return BadRequest("Flight ID does not exist, or validation didn't pass");
+                return NotFound("Flight ID does not exist");
             }
             return BadRequest("PUT get incorrect data values");
         }
