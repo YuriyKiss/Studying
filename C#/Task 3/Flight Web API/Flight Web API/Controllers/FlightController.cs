@@ -1,18 +1,10 @@
-using System;
-using System.Linq;
-using System.Threading.Tasks;
-using System.Collections.Generic;
-
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc.ApiExplorer;
 
 using Flight_Web_API.Models;
 using Flight_Web_API.Sevices;
 
 namespace Flight_Web_API.Controllers
 {
-    [Produces("application/json")]
     [Route("api/flights/")]
     [ApiController]
     public class FlightsController : ControllerBase
@@ -81,7 +73,7 @@ namespace Flight_Web_API.Controllers
         /// </remarks>
         /// <returns>Success Message and Link to GET Flight</returns>
         /// <response code="201">Returns Success Message</response>
-        /// <response code="404">If Flight data is not valid OR id is taken</response>
+        /// <response code="400">If Flight data is not valid OR ID is taken</response>
         [HttpPost]
         public ActionResult Create(Flight toAdd)
         {
@@ -128,9 +120,11 @@ namespace Flight_Web_API.Controllers
         ///
         /// </remarks>
         /// <param name="id">ID of Flight to edit</param>
+        /// <param name="toEdit">New Data for Flight</param>
         /// <returns>Success Message and Link to GET Flight</returns>
         /// <response code="202">Returns Success Message</response>
-        /// <response code="404">If Flight data is not valid OR Fligth with such ID does not exist</response>
+        /// <response code="400">If Flight data is not valid</response>
+        /// <response code="404">If Fligth with such ID does not exist</response>
         [HttpPut]
         [Route("{id}")]
         public ActionResult Edit(int id, Flight toEdit)
