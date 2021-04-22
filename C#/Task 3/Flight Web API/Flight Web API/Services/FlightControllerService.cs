@@ -48,12 +48,13 @@ namespace Flight_Web_API.Sevices
                 else
                     data = data.OrderBy(o => o.ID).ToList();
             }
+            int count = data.Count;
 
             if (limit == null || limit < 1) limit = data.Count;
             if (offset == null || offset < 1) offset = 1;
             data = data.Skip(limit * (offset - 1)).Take(limit).ToList();
 
-            return (data, data.Count);
+            return (data, count);
         }
 
         public Flight GetOne(int id)

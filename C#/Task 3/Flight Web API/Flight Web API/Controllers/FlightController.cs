@@ -32,8 +32,8 @@ namespace Flight_Web_API.Controllers
         {
             var (result, count) = service.GetAll(search, sortBy, sortOrder, offset, limit);
             if (count > 0)
-                return Ok(new { result, count });
-            return NotFound("No orders found");
+                return Ok(new { status = 200, result, count });
+            return NotFound(new { status = 404, message = "Flight with this data were not found" });
         }
 
         /// <summary>
@@ -49,8 +49,8 @@ namespace Flight_Web_API.Controllers
         {
             Flight get = service.GetOne(id);
             if (get != null)
-                return Ok(get);
-            return NotFound("Flight with such ID was not found");
+                return Ok(new { status = 200, get });
+            return NotFound(new { status = 404, message = "Flight with such ID was not found" });
         }
 
         /// <summary>
@@ -80,10 +80,10 @@ namespace Flight_Web_API.Controllers
             if (ModelState.IsValid)
             {
                 if(service.Create(toAdd) == 201)
-                    return Created($"api/flights/{toAdd.ID}", "Flight was created successfully");
-                return BadRequest("Flight ID already exist");
+                    return Created($"api/flights/{toAdd.ID}", new { status = 201, message = "Flight was created successfully" });
+                return BadRequest( new { status = 400, message = "Flight ID already exists" });
             }
-            return BadRequest("POST get incorrect data values");
+            return BadRequest(new { status = 400, message = "POST get incorrect data" });
         }
 
         /// <summary>
@@ -98,8 +98,8 @@ namespace Flight_Web_API.Controllers
         public ActionResult Delete(int id)
         {
             if (service.Delete(id) == 202)
-                return Accepted("Flight was successfully deleted");
-            return NotFound("Flight with such ID was not found");
+                return Accepted(new { status = 202, message = "Flight was successfully deleted" });
+            return NotFound(new { status = 404, message = "Flight with such ID was not found" });
         }
 
         /// <summary>
@@ -133,10 +133,10 @@ namespace Flight_Web_API.Controllers
             if (ModelState.IsValid)
             {
                 if(service.Edit(id, toEdit) == 202)
-                    return Accepted($"api/flights/{toEdit.ID}", "Flight was edited successfully");
-                return NotFound("Flight ID does not exist");
+                    return Accepted($"api/flights/{toEdit.ID}", new { status = 202, message = "Flight was edited successfully" });
+                return NotFound(new { status = 404, message = "Flight with such ID was not found" });
             }
-            return BadRequest("PUT get incorrect data values");
+            return BadRequest(new { status = 400, message = "PUT get incorrect data" });
         }
     }
 }
