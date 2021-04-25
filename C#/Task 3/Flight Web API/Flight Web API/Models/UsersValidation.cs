@@ -11,7 +11,7 @@ namespace Flight_Web_API.Models
             if (Regex.Match((string)value, "[a-zA-Z][a-zA-Z._]{4,14}[a-zA-Z]").Success)
                 return ValidationResult.Success;
             else
-                return new ValidationResult($"Login {value} idoes not match regular expression");
+                return new ValidationResult($"Login {value} does not match regular expression");
         }
     }
 }
