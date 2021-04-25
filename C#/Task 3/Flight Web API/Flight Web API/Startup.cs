@@ -3,12 +3,14 @@ using System.IO;
 using System.Reflection;
 using Microsoft.OpenApi.Models;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 
 using Flight_Web_API.Sevices;
 
@@ -26,6 +28,7 @@ namespace Flight_Web_API
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddScoped<IFlightControllerService, FlightControllerService>();
+            services.AddScoped<IUserControllerService, UserControllerService>();
 
             services.AddControllers();
             services.AddSwaggerGen(c =>
@@ -37,7 +40,27 @@ namespace Flight_Web_API
                 c.IncludeXmlComments(xmlPath);
             });
 
+            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options =>
+            {
+                options.RequireHttpsMetadata = false;
+                options.TokenValidationParameters = new TokenValidationParameters
+                {
+                    ValidateIssuer = true,
+                    ValidIssuer = AuthOptions.ISSUER,
+
+                    ValidateAudience = true,
+                    ValidAudience = AuthOptions.AUDIENCE,
+                    ValidateLifetime = true,
+                    
+                    IssuerSigningKey = AuthOptions.GetSymmetricSecurityKey(),
+                    ValidateIssuerSigningKey = true,
+                };
+            });
+
             services.AddDbContext<Models.FlightsContext>(options =>
+                     options.UseNpgsql("Host=localhost;Database=flights;Port=5432;Username=postgres;Password=12345"));
+
+            services.AddDbContext<Models.UsersContext>(options =>
                      options.UseNpgsql("Host=localhost;Database=flights;Port=5432;Username=postgres;Password=12345"));
         }
 
@@ -54,6 +77,7 @@ namespace Flight_Web_API
 
             app.UseRouting();
 
+            app.UseAuthentication();
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints => { endpoints.MapControllers(); } );
