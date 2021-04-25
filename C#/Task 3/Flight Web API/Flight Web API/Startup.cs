@@ -29,6 +29,7 @@ namespace Flight_Web_API
         {
             services.AddScoped<IFlightControllerService, FlightControllerService>();
             services.AddScoped<IUserControllerService, UserControllerService>();
+            services.AddScoped<IOrderControllerService, OrderControllerService>();
 
             services.AddControllers();
             services.AddSwaggerGen(c =>
@@ -61,6 +62,9 @@ namespace Flight_Web_API
                      options.UseNpgsql("Host=localhost;Database=flights;Port=5432;Username=postgres;Password=12345"));
 
             services.AddDbContext<Models.UsersContext>(options =>
+                     options.UseNpgsql("Host=localhost;Database=flights;Port=5432;Username=postgres;Password=12345"));
+
+            services.AddDbContext<Models.OrdersContext>(options =>
                      options.UseNpgsql("Host=localhost;Database=flights;Port=5432;Username=postgres;Password=12345"));
         }
 

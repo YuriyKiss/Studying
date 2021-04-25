@@ -8,6 +8,7 @@ using Microsoft.IdentityModel.Tokens;
 using Flight_Web_API.Models;
 using Flight_Web_API.Sevices;
 
+// Login = User.FindFirstValue(ClaimTypes.Email)
 namespace Flight_Web_API.Controllers
 {
     [Route("api/users/")]
@@ -54,6 +55,7 @@ namespace Flight_Web_API.Controllers
         {
             if (ModelState.IsValid)
             { 
+                
                 var identity = service.FindUser(loggging_in.Login, loggging_in.Password);
                 if (identity == null)
                 {

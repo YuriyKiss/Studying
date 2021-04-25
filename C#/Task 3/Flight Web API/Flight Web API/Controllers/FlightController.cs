@@ -1,3 +1,5 @@
+using System.Security.Claims;
+
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
 
@@ -34,7 +36,8 @@ namespace Flight_Web_API.Controllers
         {
             var (result, count) = service.GetAll(search, sortBy, sortOrder, offset, limit);
             if (count > 0)
-                return Ok(new { status = 200, result, count });
+                return Ok(new { status = 200, result, count});
+            
             return NotFound(new { status = 404, message = "Flight with this data were not found" });
         }
 
