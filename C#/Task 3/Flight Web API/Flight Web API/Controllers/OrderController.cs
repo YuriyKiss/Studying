@@ -14,21 +14,33 @@ namespace Flight_Web_API.Controllers
     public class OrdersController : ControllerBase
     {
         private IOrderControllerService service;
+        private IFlightControllerService fl;
 
-        public OrdersController(IOrderControllerService ser)
+        public OrdersController(IOrderControllerService ser, IFlightControllerService f)
         {
             service = ser;
+            fl = f;
         }
 
         [HttpPost]
         [Authorize]
         public ActionResult CreateOrder(Order toAdd)
         {
+            // Spaghetti code. Haven't figured out how to make it properly yet
             if (ModelState.IsValid)
             {
+                Flight dat = fl.GetOne(toAdd.FlightID);
+                if (dat == null)
+                    return NotFound(new { status = 404, message = "Flight ID does not exist" });
+                if(dat.Places - toAdd.Places < 0)
+                    return BadRequest(new { status = 400, message = "There are not enough places" });
                 if (service.Create(toAdd, User.FindFirstValue(ClaimTypes.Name)) == 201)
+                {
+                    dat.Places -= toAdd.Places;
+                    fl.Edit(dat.ID, dat);
                     return Created("", new { status = 201, message = "Order was created successfully" });
-                return BadRequest(new { status = 400, message = "Flight ID does not exist or there are none places left" });
+                }
+                return BadRequest(new { status = 400, message = "Exception occured" });
             }
             return BadRequest(new { status = 400, message = "POST get incorrect data" });
         }
