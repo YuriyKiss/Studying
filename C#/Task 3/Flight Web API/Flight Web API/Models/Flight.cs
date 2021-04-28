@@ -32,5 +32,9 @@ namespace Flight_Web_API.Models
         [Required]
         [CompanyValidation]
         public string CompanyName { get; set; }
+
+        [Required]
+        [Range(0, Int32.MaxValue, ErrorMessage = "Places {0} must be greater than {1}.")]
+        public int Places { get; set; }
     }
 }

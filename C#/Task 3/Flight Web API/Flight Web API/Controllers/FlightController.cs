@@ -1,4 +1,7 @@
+using System.Security.Claims;
+
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
 
 using Flight_Web_API.Models;
 using Flight_Web_API.Sevices;
@@ -28,11 +31,13 @@ namespace Flight_Web_API.Controllers
         /// <response code="200">Returns list of coresponding flights</response>
         /// <response code="404">If the item is null</response>  
         [HttpGet]
+        [Authorize]
         public ActionResult GetAll(string search, string sortBy, string sortOrder, int offset, int limit)
         {
             var (result, count) = service.GetAll(search, sortBy, sortOrder, offset, limit);
             if (count > 0)
-                return Ok(new { status = 200, result, count });
+                return Ok(new { status = 200, result, count});
+            
             return NotFound(new { status = 404, message = "Flight with this data were not found" });
         }
 
@@ -44,6 +49,7 @@ namespace Flight_Web_API.Controllers
         /// <response code="200">Returns found Flight</response>
         /// <response code="404">If Flight is null</response>  
         [HttpGet]
+        [Authorize]
         [Route("{id}")]
         public ActionResult GetOne(int id)
         {
@@ -75,6 +81,7 @@ namespace Flight_Web_API.Controllers
         /// <response code="201">Returns Success Message</response>
         /// <response code="400">If Flight data is not valid OR ID is taken</response>
         [HttpPost]
+        [Authorize(Roles = "admin")]
         public ActionResult Create(Flight toAdd)
         {
             if (ModelState.IsValid)
@@ -95,6 +102,7 @@ namespace Flight_Web_API.Controllers
         /// <response code="404">If Flight with ID does not exist</response>  
         [HttpDelete]
         [Route("{id}")]
+        [Authorize(Roles = "admin")]
         public ActionResult Delete(int id)
         {
             if (service.Delete(id) == 202)
@@ -127,6 +135,7 @@ namespace Flight_Web_API.Controllers
         /// <response code="404">If Fligth with such ID does not exist</response>
         [HttpPut]
         [Route("{id}")]
+        [Authorize(Roles = "admin")]
         public ActionResult Edit(int id, Flight toEdit)
         {
             toEdit.ID = id;
